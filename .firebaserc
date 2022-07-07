@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "insurancewebapptest"
+  },
+  "targets": {
+    "insurancewebapptest": {
+      "hosting": {
+        "agencypage": [
+          "agent-backoffice-agency"
+        ]
+      }
+    }
+  }
+}
