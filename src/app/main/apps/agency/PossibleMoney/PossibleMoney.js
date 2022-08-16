@@ -13,6 +13,7 @@ import FuseLoading from "@fuse/core/FuseLoading";
 import withReducer from "app/store/withReducer";
 import { makeStyles } from "@material-ui/core/styles";
 import _ from "@lodash";
+import { ceil } from "lodash";
 import reducer from "../store";
 import Table from "../../../components/widgets/Table";
 import SpecialTable from "../../../components/widgets/SpecialTable";
@@ -30,7 +31,6 @@ import {
   policies,
 } from "../../../utils/Globals";
 import { dividing, getLevel, getMain } from "../../../utils/Function";
-import { ceil } from "lodash";
 
 const belongTo = localStorage.getItem("@BELONGTO");
 const UID = localStorage.getItem("@UID");
@@ -51,7 +51,7 @@ function PossibleMoney(props) {
   const [userList, setUserList] = useState([]);
   const [year, setYear] = useState(moment().format("yyyy"));
   const [period, setPeriod] = useState(moment().format("MMMM"));
-  const [title, setTitle] = useState("Agency (Possible Money)");
+  const [title, setTitle] = useState("Agency(Possible Money)");
 
   useEffect(() => {
     dispatch(getUsers());
@@ -61,7 +61,7 @@ function PossibleMoney(props) {
   }, [dispatch]);
 
   useEffect(() => {
-    var temp = [];
+    const temp = [];
     if (users.length > 0) {
       users.map((user1) => {
         if (user1.belongTo === UID) {
@@ -84,9 +84,9 @@ function PossibleMoney(props) {
       if (tabValue === 0 && user === "") return;
       if (widgets.Agency_PossibleMoney_Current_Level_Table) {
         let totalBonus = 0;
-        let tempRows = [];
+        const tempRows = [];
 
-        let policiesCells = [
+        const policiesCells = [
           {
             id: "left_title",
             value: "Policies",
@@ -94,7 +94,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let annualPremiumCells = [
+        const annualPremiumCells = [
           {
             id: "left_title",
             value: "Anual Preminum",
@@ -102,7 +102,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let avgPremiumCells = [
+        const avgPremiumCells = [
           {
             id: "left_title",
             value: "Avg Premium",
@@ -110,7 +110,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let levelReachedCells = [
+        const levelReachedCells = [
           {
             id: "left_title",
             value: "Level Reached",
@@ -118,7 +118,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let targetBonusEarned = [
+        const targetBonusEarned = [
           {
             id: "left_title",
             value: "Target Bonus Earned",
@@ -134,44 +134,38 @@ function PossibleMoney(props) {
             let bonusSum = 0;
             if (tabValue === 0) {
               policySum =
-                main[production][period][user][policy.value]["Policies"];
+                main[production][period][user][policy.value].Policies;
               premiumSum =
-                main[production][period][user][policy.value]["Premium"];
+                main[production][period][user][policy.value].Premium;
               avgPremium = dividing(premiumSum, policySum);
               bonusSum = parseFloat(
-                ((main[production][period][user]["Auto"]["Premium"] / 2 +
-                  main[production][period][user]["Fire"]["Premium"]) *
+                ((main[production][period][user].Auto.Premium / 2 +
+                  main[production][period][user].Fire.Premium) *
                   getLevel(policySum, policy.value, bonusPlans).amount) /
                   100
               );
               if (bonus === "Include Initial Bonus in Calculation") {
                 bonusSum += parseFloat(
-                  main[production][period][user][policy.value]["Bonuses"]
+                  main[production][period][user][policy.value].Bonuses
                 );
               }
             } else {
               users.map((user1) => {
                 if (user1.belongTo === UID) {
                   policySum +=
-                    main[production][period][user1.id][policy.value][
-                      "Policies"
-                    ];
+                    main[production][period][user1.id][policy.value].Policies;
                   premiumSum +=
-                    main[production][period][user1.id][policy.value]["Premium"];
+                    main[production][period][user1.id][policy.value].Premium;
                   avgPremium = dividing(premiumSum, policySum);
                   const policyCount =
-                    main[production][period][user1.id][policy.value][
-                      "Policies"
-                    ];
+                    main[production][period][user1.id][policy.value].Policies;
                   bonusSum += parseFloat(
                     getLevel(policyCount, `Team${policy.value}`, bonusPlans)
                       .amount
                   );
                   if (bonus === "Include Initial Bonus in Calculation") {
                     bonusSum += parseFloat(
-                      main[production][period][user1.id][policy.value][
-                        "Bonuses"
-                      ]
+                      main[production][period][user1.id][policy.value].Bonuses
                     );
                   }
                 }
@@ -255,11 +249,10 @@ function PossibleMoney(props) {
 
       if (widgets.Agency_PossibleMoney_Next_Level_Table) {
         let totalBonus = 0;
-        let tempRows = [];
-        const rows =
-          widgets.Agency_PossibleMoney_Current_Level_Table.table.rows;
+        const tempRows = [];
+        const {rows} = widgets.Agency_PossibleMoney_Current_Level_Table.table;
 
-        let policiesCells = [
+        const policiesCells = [
           {
             id: "left_title",
             value: "Policies",
@@ -267,7 +260,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let annualPremiumCells = [
+        const annualPremiumCells = [
           {
             id: "left_title",
             value: "Anual Preminum",
@@ -275,7 +268,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let levelReachedCells = [
+        const levelReachedCells = [
           {
             id: "left_title",
             value: "Your Level Would Be",
@@ -283,7 +276,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let targetBonusEarned = [
+        const targetBonusEarned = [
           {
             id: "left_title",
             value: "Your Bonus Would Be",
@@ -327,7 +320,7 @@ function PossibleMoney(props) {
                 bonusPlans
               );
             }
-            const nextLevel = level.nextLevel;
+            const {nextLevel} = level;
             const nextPolicyCount = level.nextPolicies;
             const nextPremium =
               dividing(currPremium, currPolicyCount) * nextPolicyCount;
@@ -344,7 +337,7 @@ function PossibleMoney(props) {
                 100;
               if (bonus === "Include Initial Bonus in Calculation") {
                 nextBonus += parseFloat(
-                  main[production][period][user][policy.value]["Bonuses"]
+                  main[production][period][user][policy.value].Bonuses
                 );
               }
             } else {
@@ -353,9 +346,7 @@ function PossibleMoney(props) {
                 users.map((user1) => {
                   if (user1.belongTo === UID) {
                     nextBonus += parseFloat(
-                      main[production][period][user1.id][policy.value][
-                        "Bonuses"
-                      ]
+                      main[production][period][user1.id][policy.value].Bonuses
                     );
                   }
                 });
@@ -426,11 +417,10 @@ function PossibleMoney(props) {
       }
       if (widgets.Agency_PossibleMoney_Max_Level_Table) {
         let totalBonus = 0;
-        let tempRows = [];
-        const rows =
-          widgets.Agency_PossibleMoney_Current_Level_Table.table.rows;
+        const tempRows = [];
+        const {rows} = widgets.Agency_PossibleMoney_Current_Level_Table.table;
 
-        let policiesCells = [
+        const policiesCells = [
           {
             id: "left_title",
             value: "Policies",
@@ -438,7 +428,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let annualPremiumCells = [
+        const annualPremiumCells = [
           {
             id: "left_title",
             value: "Anual Preminum",
@@ -446,7 +436,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let levelReachedCells = [
+        const levelReachedCells = [
           {
             id: "left_title",
             value: "Your Level Would Be",
@@ -454,7 +444,7 @@ function PossibleMoney(props) {
             icon: "",
           },
         ];
-        let targetBonusEarned = [
+        const targetBonusEarned = [
           {
             id: "left_title",
             value: "Your Bonus Would Be",
@@ -498,7 +488,7 @@ function PossibleMoney(props) {
                 bonusPlans
               );
             }
-            const maxLevel = level.maxLevel;
+            const {maxLevel} = level;
             const maxPolicyCount = level.maxPolicies;
             const maxPremium =
               dividing(currPremium, currPolicyCount) * maxPolicyCount;
@@ -514,7 +504,7 @@ function PossibleMoney(props) {
                 ((maxAutoPremium / 2 + maxFirePremium) * level.maxAmount) / 100;
               if (bonus === "Include Initial Bonus in Calculation") {
                 maxBonus += parseFloat(
-                  main[production][period][user][policy.value]["Bonuses"]
+                  main[production][period][user][policy.value].Bonuses
                 );
               }
             } else {
@@ -523,9 +513,7 @@ function PossibleMoney(props) {
                 users.map((user1) => {
                   if (user1.belongTo === UID) {
                     maxBonus += parseFloat(
-                      main[production][period][user1.id][policy.value][
-                        "Bonuses"
-                      ]
+                      main[production][period][user1.id][policy.value].Bonuses
                     );
                   }
                 });
@@ -599,7 +587,7 @@ function PossibleMoney(props) {
         widgets.Agency_PossibleMoney_BonusPlan_Table &&
         bonusPlans.length > 0
       ) {
-        let tempBonusPlans = {};
+        const tempBonusPlans = {};
         let dbName = "";
         if (tabValue === 0) {
           dbName = "indDb";
@@ -626,11 +614,11 @@ function PossibleMoney(props) {
         });
         console.log("---Bonus Plan", tempBonusPlans);
 
-        const rows = widgets.Agency_PossibleMoney_BonusPlan_Table.table.rows;
-        let tempRows = [];
+        const {rows} = widgets.Agency_PossibleMoney_BonusPlan_Table.table;
+        const tempRows = [];
         rows.map((row, rowNum) => {
           let tempRow = row;
-          let tempCells = [];
+          const tempCells = [];
           row.cells.map((cell, cellNum) => {
             let tempCell = cell;
             const level = row.cells[0].value;
@@ -665,8 +653,8 @@ function PossibleMoney(props) {
         };
       }
       if (widgets.Agency_PossibleMoney_Chart) {
-        let tempDatasets = [];
-        let tempBonuses = {
+        const tempDatasets = [];
+        const tempBonuses = {
           "Current Bonus": 0,
           "Next Level": 0,
           "Max Level": 0,
@@ -676,7 +664,7 @@ function PossibleMoney(props) {
         ).map((key, n) => {
           let temp =
             widgets.Agency_PossibleMoney_Chart.mainChart.TW.datasets[key];
-          let tempData = [];
+          const tempData = [];
           if (temp.label !== "Total") {
             tempData.push(
               widgets.Agency_PossibleMoney_Current_Level_Table.table.rows[4]
@@ -916,6 +904,7 @@ function PossibleMoney(props) {
               enter={{ animation: "transition.slideUpBigIn" }}
             >
               <SpecialTable
+              noDolarSign
                 data={data.widgets.Agency_PossibleMoney_BonusPlan_Table}
               />
             </FuseAnimateGroup>

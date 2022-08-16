@@ -33,12 +33,12 @@ function Widget(props) {
 	});
 
 	const tableId = props.data.id;
-	const tableContent = props.data.table.tableContent;
-	const headers = props.data.table.headers;
-	const rows = props.data.table.rows;
-	const columns = props.data.table.columns;
+	const {tableContent} = props.data.table;
+	const {headers} = props.data.table;
+	const {rows} = props.data.table;
+	const {columns} = props.data.table;
 	const sortTableContent = [];
-	const selected = props.selected;
+	const {selected} = props;
 
 	if (props.sortable) {
 		rows.map((row, rowNum) => {
@@ -93,7 +93,7 @@ function Widget(props) {
 					<TableHead>
 						<TableRow
 							// className={props.lg ? LG_ROW_HEIGHT : props.md ? MD_ROW_HEIGHT : SM_ROW_HEIGHT}
-							key={`header_row_1`}
+							key="header_row_1"
 						>
 							{columns.map((column, col) => {
 								switch (column.id) {
@@ -132,7 +132,7 @@ function Widget(props) {
 						</TableRow>
 						<TableRow
 							className={props.lg ? LG_ROW_HEIGHT : props.md ? MD_ROW_HEIGHT : SM_ROW_HEIGHT}
-							key={`header_row_2`}
+							key="header_row_2"
 						>
 							{headers.map((cell, col) => {
 								return (
@@ -140,7 +140,7 @@ function Widget(props) {
 										key={`header_row_2_cell_${col}`}
 										component="th"
 										scope="rowNum"
-										align={'center'}
+										align="center"
 										// padding={cell.disablePadding ? 'none' : 'default'}
 										sortDirection={order.id === cell.id ? order.direction : false}
 										className={clsx(`
@@ -177,11 +177,12 @@ function Widget(props) {
 						{!props.sortable &&
 							!_.isEmpty(tableContent) &&
 							Object.keys(tableContent).map((rowKey, rowNum) => {
-								//console.log(tableContent)
+								// console.log(tableContent)
 								return (
 									<TableRow
-										className={`${props.lg ? LG_ROW_HEIGHT : props.md ? MD_ROW_HEIGHT : SM_ROW_HEIGHT
-											} ${rows.length > 0 && rows[rowNum].hidden ? 'hidden' : ''}`}
+										className={`${
+											props.lg ? LG_ROW_HEIGHT : props.md ? MD_ROW_HEIGHT : SM_ROW_HEIGHT
+										} ${rows.length > 0 && rows[rowNum].hidden ? 'hidden' : ''}`}
 										key={`body_row_${rowNum}`}
 									>
 										{!props.hideLeftHeader && (
@@ -189,7 +190,7 @@ function Widget(props) {
 												key={`body_cell_${rowNum}`}
 												component="th"
 												scope="rowNum"
-												align="center" //p-5
+												align="center" // p-5
 												className={clsx(`
 											p-5 text-xs truncate border-r-1 
 											${rows.length > 0 && rows[rowNum].color}
@@ -210,9 +211,9 @@ function Widget(props) {
 														key={`body_cell_${rowNum}_${colNum}`}
 														component="th"
 														scope="rowNum"
-														align="center" //p-5
+														align="center" // p-5
 														className={clsx(`
-											p-0 text-xs truncate 
+											p-0 text-xs truncate
 											${colNum === Object.keys(tableContent[rowKey]).length - 1 ? `border-r-0` : `border-r-1`} 
 											${rows.length > 0 && rows[rowNum].border}
 											${headers.length > 0 && columns.length === 0 && headers[colNum + 1].border}
@@ -227,7 +228,7 @@ function Widget(props) {
 															formattedString(
 																tableContent[rowKey][headers[colNum + 1].value],
 																headers[colNum + 1].startAdornment,
-																headers[colNum + 1].endAdornment
+																colKey==='Percent of Total'?`%`:headers[colNum + 1].endAdornment
 															)}
 
 														{!props.editable &&
@@ -235,8 +236,26 @@ function Widget(props) {
 															headers.length > 0 &&
 															colKey !== 'Bonus Verified?' &&
 															colKey !== 'Amount Paid to Producer' &&
-															formattedString(
+															formattedString(																
 																tableContent[rowKey][headers[colNum].value],
+																(colKey==='Auto Policy Bonuses'
+																||colKey==='Fire Policy Bonuses'
+																||colKey==='Life Policy Bonuses'
+																||colKey==='Health Policy Bonuses'
+																||colKey==="Bank Product Bonuses"
+																||colKey==="Individual Auto Target Bonuses"
+																||colKey==="Individual Fire Target Bonuses"
+																||colKey==="Individual Life Target Bonuses"
+																||colKey==="Individual Health Target Bonuses"
+																||colKey==="Individual Bank Target Bonuses"
+																||colKey==="Auto Policies Transfered In"
+																||colKey==="Fire Policies Transfered In"
+																||colKey==="Life Policies Transfered In"
+																||colKey==="Health Policies Transfered In"
+																||colKey==="Bank Documents Bought In"
+																||colKey==="IFR Appt. Made"
+																||colKey==="IFR Appt. Kept"
+																||colKey==="IFR Resulted In New Business")?'$':																
 																headers[colNum].startAdornment,
 																headers[colNum].endAdornment
 															)}
@@ -270,10 +289,13 @@ function Widget(props) {
 															rowKey !== 'Total' && (
 																<TextInput
 																	id="contact phone number"
+																	className={clsx('text-center')}
 																	key={`amount_input_${rowNum}_${colNum}`}
 																	value={formattedString(
 																		tableContent[rowKey][colKey]
 																	)}
+																	inputProps={{min: 0, style: { textAlign: 'center' }}}
+
 																	onChange={event =>
 																		handleAmountChange(
 																			event,
@@ -285,9 +307,7 @@ function Widget(props) {
 																	}
 																	// size="small"
 																	readOnly={false}
-																	inputProps={{
-																		'aria-label': 'naked'
-																	}}
+																	
 																/>
 															)}
 
@@ -297,7 +317,7 @@ function Widget(props) {
 																	id="contact phone number"
 																	key={`input_${rowNum}_${colNum}`}
 																	// type="number"
-																	className={clsx('min-w-44')}
+																	className={clsx('min-w-44 text-center')}
 																	value={formattedString(
 																		tableContent[rowKey][colKey]
 																	)}
@@ -331,24 +351,18 @@ function Widget(props) {
 																				rows[rowNum].endAdornment}
 																		</InputAdornment>
 																	}
-																	inputProps={{
-																		'aria-label': 'naked'
-																	}}
+																	inputProps={{min: 0, style: { textAlign: 'center' }}}
 																/>
-																{console.log('++++++++++++++++++',colKey.split(" ")[colKey.split(" ").length-1])}
+																{/* {console.log(colKey==='Annual Auto Premium')} */}
 																{((props.percent && rowKey === 'Average Commission') && (
 																	<div>%</div>
-																	)) ||
-																	(((colKey === 'Annual Auto Premium' || colKey === 'Annual Fire Premium' ||
-																		colKey === 'Annual Life Premium' || colKey === 'Annual Health Premium' ||
-																		colKey === 'Agency Bank Comm' || colKey === 'Total Annual Premium')) 
-																	&& (<div>$</div>))
+																)) || 
+																(((colKey==='Annual Auto Premium'||colKey==='Annual Fire Premium'||
+																colKey==='Annual Life Premium'||colKey==='Annual Health Premium'||
+																colKey==='Annual Bank Premium'||colKey==='Total Annual Premium'))&&(<div>$</div>))
 																}
 															</div>
 														)}
-														{
-															(!props.editable && colKey.split(" ").length>0 && colKey.split(" ")[colKey.split(" ").length-1]==='Bonuses' && (<div>$</div>))
-														}
 													</TableCell>
 												)
 										)}
@@ -381,7 +395,7 @@ function Widget(props) {
 												key={`sort_table_cell_${rowNum}`}
 												component="th"
 												scope="rowNum"
-												align="center" //p-5
+												align="center" // p-5
 												className={clsx(`
 										p-0 text-xs truncate border-r-1 
 										${rows.length > 0 && rows[rowNum].color}
@@ -399,7 +413,7 @@ function Widget(props) {
 															key={`sort_table_cell_${rowNum}_${colNum}`}
 															component="th"
 															scope="rowNum"
-															align="center" //p-5
+															align="center" // p-5
 															className={clsx(`
 											p-0 text-xs truncate 
 											${colNum === Object.keys(row).length - 1 ? `border-r-0` : `border-r-1`} 
@@ -421,7 +435,7 @@ function Widget(props) {
 				</Table>
 			</FuseScrollbars>
 			{props.sortable && (
-				<TablePagination
+				<TablePagination				
 					className="flex-shrink-0 border-t-1"
 					component="div"
 					count={sortTableContent.length}

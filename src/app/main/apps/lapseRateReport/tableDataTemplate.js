@@ -1155,3 +1155,18 @@ export const levelColumns = [
 		title: 'Bonus'
 	}
 ];
+
+export const fireLevelColumns = [
+	{
+		id: 'budget_type',
+		title: 'LAPSE RATE %'
+	},
+	{
+		id: 'total_budget',
+		title: 'Fire'
+	},
+	{
+		id: 'spent_usd',
+		title: 'Bonus'
+	}
+];

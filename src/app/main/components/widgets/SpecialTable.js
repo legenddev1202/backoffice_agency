@@ -72,7 +72,7 @@ function Widget10(props) {
                         >
                           <Typography className={cell.classes}>
                             {(row.id === 2 || row.id === 5) && cell.value !== 0
-                              ? `$ ${formattedString(cell.value)}`
+                              ? props.noDolarSign?formattedString(cell.value):`$ ${formattedString(cell.value)}`
                               : formattedString(cell.value)}
                           </Typography>
                         </TableCell>

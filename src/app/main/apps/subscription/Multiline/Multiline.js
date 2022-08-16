@@ -12,17 +12,7 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import withReducer from 'app/store/withReducer';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from '@lodash';
-import reducer from '../store';
-import Table from '../../../components/widgets/Table';
-import Chart from '../../../components/widgets/BarChart';
-import PieChart from '../../../components/widgets/PieChart';
-import SelectBox from '../../../components/CustomSelectBox';
-import Header from '../../../components/widgets/Header';
-import { getWidgets, selectWidgets } from '../store/widgetsSlice';
 import { Elements } from '@stripe/react-stripe-js';
-import { getUsers, selectUsers } from '../store/usersSlice';
-import { realDb } from '../../../../../@fake-db/db/firebase';
-import SubscriptionCard from './SubscriptionCard';
 import {
 	firebaseFunctionGetProductsEndpoint,
 	firebaseFunctionGetSubscrioption,
@@ -35,8 +25,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import CardElements from './CardElement';
 import { loadStripe } from '@stripe/stripe-js';
+import reducer from '../store';
+import Table from '../../../components/widgets/Table';
+import Chart from '../../../components/widgets/BarChart';
+import PieChart from '../../../components/widgets/PieChart';
+import SelectBox from '../../../components/CustomSelectBox';
+import Header from '../../../components/widgets/Header';
+import { getWidgets, selectWidgets } from '../store/widgetsSlice';
+import { getUsers, selectUsers } from '../store/usersSlice';
+import { realDb } from '../../../../../@fake-db/db/firebase';
+import SubscriptionCard from './SubscriptionCard';
+import CardElements from './CardElement';
 import CardInfo from './CardInfo';
 
 const belongTo = localStorage.getItem('@BELONGTO');
@@ -49,9 +49,9 @@ const stripePromise = loadStripe(publicKeyTest);
 
 function Multiline(props) {
 	const dispatch = useDispatch();
-	let widgets = useSelector(selectWidgets);
+	const widgets = useSelector(selectWidgets);
 
-	let user = useSelector(selectUsers);
+	const user = useSelector(selectUsers);
 	const [loading, setLoading] = useState(true);
 	// const [data, setData] = useState({ widgets });
 
@@ -89,7 +89,7 @@ function Multiline(props) {
 				});
 
 				console.log(response);
-				let temp = { ...user[0], subscriptionInfo: { ...user[0].subscriptionInfo, active: false } };
+				const temp = { ...user[0], subscriptionInfo: { ...user[0].subscriptionInfo, active: false } };
 				// delete temp.subscriptionInfo;
 				console.log(temp);
 				if (response) {
@@ -178,7 +178,7 @@ function Multiline(props) {
 	function setPaymentState(result) {
 		console.log(result);
 
-		let uid = localStorage.getItem('@BELONGTO');
+		const uid = localStorage.getItem('@BELONGTO');
 
 		realDb.ref(`admin/${uid}/subscriptionInfo/secondResponse`).set({
 			...result
@@ -190,7 +190,7 @@ function Multiline(props) {
 	function createPaymentState(result) {
 		console.log(result);
 
-		let uid = localStorage.getItem('@BELONGTO');
+		const uid = localStorage.getItem('@BELONGTO');
 
 		realDb.ref(`admin/${uid}/subscriptionInfo/`).set({
 			...result
@@ -224,11 +224,11 @@ function Multiline(props) {
 			classes={{
 				content: 'flex',
 				contentCard: 'overflow-hidden',
-				header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
+				header: 'min-h-36 h-36 sm:h-72 sm:min-h-72'
 			}}
-			header={<Header title={title}></Header>}
+			header={<Header title={title} />}
 			content={
-				<div className="w-full p-12 flex items-center justify-center">
+				<div className="w-full p-12 flex h-full items-center justify-center">
 					<FuseAnimateGroup
 						className="flex flex-wrap items-center flex-col"
 						enter={{ animation: 'transition.slideUpBigIn' }}
@@ -236,7 +236,6 @@ function Multiline(props) {
 						{!openPay && (
 							<>
 								<FuseAnimate animation="transition.slideUpIn" delay={400}>
-									<div className="flex">
 										{state.currentSubscription && (
 											<SubscriptionCard
 												setBuy={setBuy}
@@ -247,7 +246,6 @@ function Multiline(props) {
 												resumePlan={resumePlan}
 											/>
 										)}
-									</div>
 								</FuseAnimate>
 								<FuseAnimate animation="transition.slideUpIn" delay={400}>
 									<div className="flex">
@@ -283,7 +281,7 @@ function Multiline(props) {
 						aria-labelledby="alert-dialog-title"
 						aria-describedby="alert-dialog-description"
 					>
-						<DialogTitle id="alert-dialog-title">{'Are you really cancel this plan?'}</DialogTitle>
+						<DialogTitle id="alert-dialog-title">Are you really cancel this plan?</DialogTitle>
 						<DialogContent>
 							<DialogContentText id="alert-dialog-description">
 								{/* {`Your account can use for ${

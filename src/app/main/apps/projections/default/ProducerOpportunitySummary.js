@@ -19,7 +19,7 @@ import { ceil } from '../../../utils/Function';
 
 const UID = localStorage.getItem('@UID');
 
-let avgsTableContent = {};
+const avgsTableContent = {};
 
 function Component() {
 	const dispatch = useDispatch();
@@ -51,18 +51,18 @@ function Component() {
 				policies.map(policy => {
 					avgsTableContent[row.value][policy.value] = 0;
 				});
-				delete avgsTableContent[row.value]['Total'];
+				delete avgsTableContent[row.value].Total;
 			});
 			if (projections.length > 0 && user != '') {
 				if (projections[0].hasOwnProperty(user)) {
 					const projectionsData = projections[0][user];
 
 					// averages
-					Object.keys(projectionsData['Averages']).map(key => {
+					Object.keys(projectionsData.Averages).map(key => {
 						if (key !== 'id')
-							Object.keys(projectionsData['Averages'][key]).map(valKey => {
+							Object.keys(projectionsData.Averages[key]).map(valKey => {
 								avgsTableContent[toUntrimed[key]][valKey] = parseFloat(
-									projectionsData['Averages'][key][valKey]
+									projectionsData.Averages[key][valKey]
 								);
 							});
 					});
@@ -74,7 +74,7 @@ function Component() {
 				}
 			}
 
-			setMain({ avgsTableContent: avgsTableContent });
+			setMain({ avgsTableContent });
 		}
 	}, [projections]);
 
@@ -83,24 +83,24 @@ function Component() {
 			...widgets,
 			data: [
 				{
-					proTable: widgets['Projections_Default_Producer_Opportunity_Summary_Production_Table'],
-					incTable: widgets['Projections_Default_Producer_Opportunity_Summary_Income_Table']
+					proTable: widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table,
+					incTable: widgets.Projections_Default_Producer_Opportunity_Summary_Income_Table
 				},
 				{
-					proTable: widgets['Projections_Default_Producer_Opportunity_Summary_Production_Table'],
-					incTable: widgets['Projections_Default_Producer_Opportunity_Summary_Income_Table']
+					proTable: widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table,
+					incTable: widgets.Projections_Default_Producer_Opportunity_Summary_Income_Table
 				},
 				{
-					proTable: widgets['Projections_Default_Producer_Opportunity_Summary_Production_Table'],
-					incTable: widgets['Projections_Default_Producer_Opportunity_Summary_Income_Table']
+					proTable: widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table,
+					incTable: widgets.Projections_Default_Producer_Opportunity_Summary_Income_Table
 				},
 				{
-					proTable: widgets['Projections_Default_Producer_Opportunity_Summary_Production_Table'],
-					incTable: widgets['Projections_Default_Producer_Opportunity_Summary_Income_Table']
+					proTable: widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table,
+					incTable: widgets.Projections_Default_Producer_Opportunity_Summary_Income_Table
 				},
 				{
-					proTable: widgets['Projections_Default_Producer_Opportunity_Summary_Production_Table'],
-					incTable: widgets['Projections_Default_Producer_Opportunity_Summary_Income_Table']
+					proTable: widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table,
+					incTable: widgets.Projections_Default_Producer_Opportunity_Summary_Income_Table
 				}
 			]
 		};
@@ -121,30 +121,30 @@ function Component() {
 			if (widgets.Projections_Default_Producer_Opportunity_Summary_Production_Table) {
 				const bonusPlan = bonusPlanTemplates[0][state.bonusPlan];
 
-				let indAutoBonus = Object.values(bonusPlan['individualAutoTargetBonus']);
-				let indFireBonus = Object.values(bonusPlan['individualFireTargetBonus']);
-				let indLifeBonus = Object.values(bonusPlan['individualLifeTargetBonus']);
-				let indHealthBonus = Object.values(bonusPlan['individualHealthTargetBonus']);
-				let indBankBonus = Object.values(bonusPlan['individualBankTargetBonus']);
+				let indAutoBonus = Object.values(bonusPlan.individualAutoTargetBonus);
+				let indFireBonus = Object.values(bonusPlan.individualFireTargetBonus);
+				let indLifeBonus = Object.values(bonusPlan.individualLifeTargetBonus);
+				let indHealthBonus = Object.values(bonusPlan.individualHealthTargetBonus);
+				let indBankBonus = Object.values(bonusPlan.individualBankTargetBonus);
 				indAutoBonus = _.sortBy(indAutoBonus, 'level');
 				indFireBonus = _.sortBy(indFireBonus, 'level');
 				indLifeBonus = _.sortBy(indLifeBonus, 'level');
 				indHealthBonus = _.sortBy(indHealthBonus, 'level');
 				indBankBonus = _.sortBy(indBankBonus, 'level');
 
-				let teamAutoBonus = Object.values(bonusPlan['teamAutoTargetBonus']);
-				let teamFireBonus = Object.values(bonusPlan['teamFireTargetBonus']);
-				let teamLifeBonus = Object.values(bonusPlan['teamLifeTargetBonus']);
-				let teamHealthBonus = Object.values(bonusPlan['teamHealthTargetBonus']);
-				let teamBankBonus = Object.values(bonusPlan['teamBankTargetBonus']);
+				let teamAutoBonus = Object.values(bonusPlan.teamAutoTargetBonus);
+				let teamFireBonus = Object.values(bonusPlan.teamFireTargetBonus);
+				let teamLifeBonus = Object.values(bonusPlan.teamLifeTargetBonus);
+				let teamHealthBonus = Object.values(bonusPlan.teamHealthTargetBonus);
+				let teamBankBonus = Object.values(bonusPlan.teamBankTargetBonus);
 				teamAutoBonus = _.sortBy(teamAutoBonus, 'level');
 				teamFireBonus = _.sortBy(teamFireBonus, 'level');
 				teamLifeBonus = _.sortBy(teamLifeBonus, 'level');
 				teamHealthBonus = _.sortBy(teamHealthBonus, 'level');
 				teamBankBonus = _.sortBy(teamBankBonus, 'level');
 
-				let lapseAutoBonus = bonusPlan['monthlyAgencyLapseAutoBonus'];
-				let lapseFireBonus = bonusPlan['monthlyAgencyLapseFireBonus'];
+				let lapseAutoBonus = bonusPlan.monthlyAgencyLapseAutoBonus;
+				let lapseFireBonus = bonusPlan.monthlyAgencyLapseFireBonus;
 				lapseAutoBonus = _.sortBy(lapseAutoBonus, 'level');
 				lapseFireBonus = _.sortBy(lapseFireBonus, 'level');
 
@@ -171,7 +171,7 @@ function Component() {
 				let proTableContent = {};
 				let incTableContent = {};
 
-				let tableData = [];
+				const tableData = [];
 				[0, 1, 2, 3, 4].map(number => {
 					const level = number;
 
@@ -197,21 +197,21 @@ function Component() {
 							const teamBonus = teamBonuses[policy][level];
 
 							// production
-							proTableContent['Per Month'][policy] = indBonus['policies'];
-							proTableContent['Per Year'][policy] = indBonus['policies'] * 12;
+							proTableContent['Per Month'][policy] = indBonus.policies;
+							proTableContent['Per Year'][policy] = indBonus.policies * 12;
 							proTableContent['Premium Per Month'][policy] =
-								indBonus['policies'] * avgsTableContent[avgPremium][policy];
+								indBonus.policies * avgsTableContent[avgPremium][policy];
 							proTableContent['Premium Per Year'][policy] =
-								indBonus['policies'] * avgsTableContent[avgPremium][policy] * 12;
+								indBonus.policies * avgsTableContent[avgPremium][policy] * 12;
 
 							// production total
 							if (policy !== 'Bank') {
-								proTableContent['Per Month']['Total'] += ceil(proTableContent['Per Month'][policy]);
-								proTableContent['Per Year']['Total'] += ceil(proTableContent['Per Year'][policy]);
-								proTableContent['Premium Per Month']['Total'] += ceil(
+								proTableContent['Per Month'].Total += ceil(proTableContent['Per Month'][policy]);
+								proTableContent['Per Year'].Total += ceil(proTableContent['Per Year'][policy]);
+								proTableContent['Premium Per Month'].Total += ceil(
 									proTableContent['Premium Per Month'][policy]
 								);
-								proTableContent['Premium Per Year']['Total'] += ceil(
+								proTableContent['Premium Per Year'].Total += ceil(
 									proTableContent['Premium Per Year'][policy]
 								);
 							}
@@ -226,11 +226,11 @@ function Component() {
 											avgsTableContent[avgBonus][policy]) /
 									  100;
 							incTableContent['Individual Target Bonuses'][policy] =
-								((indBonuses['Auto'][level]['policies'] * avgsTableContent[avgPremium]['Auto'] * 0.5 +
-									indBonuses['Fire'][level]['policies'] * avgsTableContent[avgPremium]['Fire']) *
-									indBonus['amount']) /
+								((indBonuses.Auto[level].policies * avgsTableContent[avgPremium].Auto * 0.5 +
+									indBonuses.Fire[level].policies * avgsTableContent[avgPremium].Fire) *
+									indBonus.amount) /
 								100;
-							incTableContent['Team Target Bonus Project'][policy] = teamBonus['amount'];
+							incTableContent['Team Target Bonus Project'][policy] = teamBonus.amount;
 							incTableContent['Monthly Totals'][policy] =
 								ceil(incTableContent['Individual Item Bonuses'][policy]) +
 								ceil(incTableContent['Individual Target Bonuses'][policy]) +
@@ -238,19 +238,19 @@ function Component() {
 							incTableContent['Annual Totals'][policy] = incTableContent['Monthly Totals'][policy] * 12;
 
 							// income total
-							incTableContent['Individual Item Bonuses']['Total'] += ceil(
+							incTableContent['Individual Item Bonuses'].Total += ceil(
 								incTableContent['Individual Item Bonuses'][policy]
 							);
-							incTableContent['Individual Target Bonuses']['Total'] += ceil(
+							incTableContent['Individual Target Bonuses'].Total += ceil(
 								incTableContent['Individual Target Bonuses'][policy]
 							);
-							incTableContent['Team Target Bonus Project']['Total'] += ceil(
+							incTableContent['Team Target Bonus Project'].Total += ceil(
 								incTableContent['Team Target Bonus Project'][policy]
 							);
-							incTableContent['Monthly Totals']['Total'] += ceil(
+							incTableContent['Monthly Totals'].Total += ceil(
 								incTableContent['Monthly Totals'][policy]
 							);
-							incTableContent['Annual Totals']['Total'] += ceil(
+							incTableContent['Annual Totals'].Total += ceil(
 								incTableContent['Team Target Bonus Project'][policy]
 							);
 						}
@@ -261,24 +261,24 @@ function Component() {
 					incTableContent['Individual Target Bonuses']['Lapse%'] = 0;
 					incTableContent['Team Target Bonus Project']['Lapse%'] = 0;
 					incTableContent['Monthly Totals']['Lapse%'] =
-						ceil(lapseAutoBonus[level]['dollar']) + ceil(lapseFireBonus[level]['dollar']);
+						ceil(lapseAutoBonus[level].dollar) + ceil(lapseFireBonus[level].dollar);
 					incTableContent['Team Target Bonus Project']['Lapse%'] =
-						ceil(lapseAutoBonus[level]['dollar']) + ceil(lapseFireBonus[level]['dollar']);
+						ceil(lapseAutoBonus[level].dollar) + ceil(lapseFireBonus[level].dollar);
 					incTableContent['Annual Totals']['Lapse%'] =
 						incTableContent['Team Target Bonus Project']['Lapse%'] * 12;
 
 					// income total
-					incTableContent['Individual Item Bonuses']['Total'] += ceil(
+					incTableContent['Individual Item Bonuses'].Total += ceil(
 						incTableContent['Individual Item Bonuses']['Lapse%']
 					);
-					incTableContent['Individual Target Bonuses']['Total'] += ceil(
+					incTableContent['Individual Target Bonuses'].Total += ceil(
 						incTableContent['Individual Target Bonuses']['Lapse%']
 					);
-					incTableContent['Team Target Bonus Project']['Total'] += ceil(
+					incTableContent['Team Target Bonus Project'].Total += ceil(
 						incTableContent['Team Target Bonus Project']['Lapse%']
 					);
-					incTableContent['Monthly Totals']['Total'] += ceil(incTableContent['Monthly Totals']['Lapse%']);
-					incTableContent['Annual Totals']['Total'] += ceil(incTableContent['Monthly Totals']['Total'] * 12);
+					incTableContent['Monthly Totals'].Total += ceil(incTableContent['Monthly Totals']['Lapse%']);
+					incTableContent['Annual Totals'].Total += ceil(incTableContent['Monthly Totals'].Total * 12);
 
 					widgets = {
 						...widgets,
@@ -358,7 +358,7 @@ function Component() {
 				contentCard: 'overflow-hidden',
 				header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
 			}}
-			header={<Header title={title}></Header>}
+			header={<Header title={title} />}
 			content={
 				<div className="w-full p-12">
 					<div className="flex items-center justify-center p-12">
@@ -377,13 +377,13 @@ function Component() {
 							enter={{ animation: 'transition.slideUpBigIn' }}
 						>
 							<div key={`pro-div-${level}`} className="flex justify-between items-center w-1/2 p-12">
-								{data.widgets['data'] && (
-									<Table key={`pro-table-${level}`} data={data.widgets['data'][level]['proTable']} />
+								{data.widgets.data && (
+									<Table key={`pro-table-${level}`} data={data.widgets.data[level].proTable} />
 								)}
 							</div>
 							<div key={`inc-div-${level}`} className="flex justify-between items-center w-1/2 p-12">
-								{data.widgets['data'] && (
-									<Table key={`inc-table-${level}`} data={data.widgets['data'][level]['incTable']} />
+								{data.widgets.data && (
+									<Table key={`inc-table-${level}`} data={data.widgets.data[level].incTable} />
 								)}
 							</div>
 						</FuseAnimateGroup>

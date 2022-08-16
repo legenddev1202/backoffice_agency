@@ -8,11 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import FuseLoading from '@fuse/core/FuseLoading';
 import withReducer from 'app/store/withReducer';
 import _ from '@lodash';
-import reducer from '../store';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import reducer from '../store';
 import Table from '../../../components/widgets/Table';
 import SelectBox from '../../../components/CustomSelectBox';
 import Header from '../../../components/widgets/Header';
@@ -31,18 +31,19 @@ import {
 	toUntrimed
 } from '../../../utils/Globals';
 import { swap, getLevel, getOtherActivityBonus } from '../../../utils/Function';
+
 const belongTo = localStorage.getItem('@BELONGTO');
 const UID = localStorage.getItem('@UID');
 
-let goalsTableColumns = incomeGoalsColumns;
-let bonusesTableColumns = incomeBonusesColumns;
+const goalsTableColumns = incomeGoalsColumns;
+const bonusesTableColumns = incomeBonusesColumns;
 
 let avgsTableContent = {};
 let goalsTableContent = {};
-let bonusesTableContent = {};
+const bonusesTableContent = {};
 
-let goalsTableHeader = incomeGoalsHeaders;
-let bonusesTableHeader = incomeBonusesHeaders;
+const goalsTableHeader = incomeGoalsHeaders;
+const bonusesTableHeader = incomeBonusesHeaders;
 
 function IncomeGoals(props) {
 	const dispatch = useDispatch();
@@ -121,7 +122,7 @@ function IncomeGoals(props) {
 	}, [dispatch, date, user]);
 
 	useEffect(() => {
-		var temp = [];
+		const temp = [];
 		if (users.length > 0) {
 			users.map(user => {
 				if (user.belongTo === belongTo) {
@@ -142,8 +143,8 @@ function IncomeGoals(props) {
 	useEffect(() => {
 		let otherActivityBonus = {};
 		if (bonusPlans.length > 0 && bonusPlans[0].hasOwnProperty('otherActivityBonus')) {
-			otherActivityBonus = bonusPlans[0]['otherActivityBonus'];
-			//console.log('OtherActivityBonus===', otherActivityBonus);
+			otherActivityBonus = bonusPlans[0].otherActivityBonus;
+			// console.log('OtherActivityBonus===', otherActivityBonus);
 		}
 
 		if (!_.isEmpty(otherActivityBonus) && goalsTableColumns.length === 3) {
@@ -184,7 +185,7 @@ function IncomeGoals(props) {
 			policies.map(policy => {
 				avgsTableContent[row.value][policy.value] = 0;
 			});
-			delete avgsTableContent[row.value]['Total'];
+			delete avgsTableContent[row.value].Total;
 		});
 
 		if (user != '') {
@@ -192,11 +193,11 @@ function IncomeGoals(props) {
 				if (vision[0].hasOwnProperty(user)) {
 					const visionData = vision[0][user];
 					// averages
-					Object.keys(visionData['Averages']).map(key => {
+					Object.keys(visionData.Averages).map(key => {
 						if (key !== 'id')
-							Object.keys(visionData['Averages'][key]).map(valKey => {
+							Object.keys(visionData.Averages[key]).map(valKey => {
 								avgsTableContent[toUntrimed[key]][valKey] = parseFloat(
-									visionData['Averages'][key][valKey]
+									visionData.Averages[key][valKey]
 								);
 							});
 					});
@@ -204,14 +205,14 @@ function IncomeGoals(props) {
 					months1.map(month => {
 						goalsTableContent[month] = {};
 						goalsTableHeader.map(header => {
-							goalsTableContent[month][header.value] = visionData['Goals'][month][header.id];
+							goalsTableContent[month][header.value] = visionData.Goals[month][header.id];
 						});
 					});
 					// bonuses
 					months1.map(month => {
 						bonusesTableContent[month] = {};
 						bonusesTableHeader.map(header => {
-							bonusesTableContent[month][header.value] = visionData['Bonuses'][month][header.id];
+							bonusesTableContent[month][header.value] = visionData.Bonuses[month][header.id];
 						});
 					});
 				}
@@ -274,7 +275,7 @@ function IncomeGoals(props) {
 					}
 				};
 
-				//bonuses
+				// bonuses
 				widgets = {
 					...widgets,
 					Vision_IncomeGoals_Bonuses_Table: {
@@ -290,21 +291,21 @@ function IncomeGoals(props) {
 			}
 		}
 
-		//console.log('----widgets=', widgets);
+		// console.log('----widgets=', widgets);
 
 		setData({ widgets });
 	}, [widgets, main]);
 
 	useEffect(() => {
-		const tableName = cell.tableName;
-		let row = cell.row;
-		const col = cell.col;
-		let rowKey = cell.rowKey;
-		const colKey = cell.colKey;
+		const {tableName} = cell;
+		let {row} = cell;
+		const {col} = cell;
+		let {rowKey} = cell;
+		const {colKey} = cell;
 		let value = parseFloat(cell.value === '' ? 0 : cell.value);
 		let value1 = 0;
 		let r = row;
-		let rr = 12;
+		const rr = 12;
 		const maxRow = 16;
 		const skipCol = 5;
 
@@ -341,7 +342,7 @@ function IncomeGoals(props) {
 		const bonusCols = _.map(bonusesTableHeader, item => item.value);
 
 		for (let i = r; i < rr; i++) {
-			var step = 3;
+			let step = 3;
 			if (tableName === 'GOALS' && cell.row === 16) {
 				step = 12;
 			}
@@ -484,7 +485,7 @@ function IncomeGoals(props) {
 			}
 		}
 
-		//console.log('---main', main);
+		// console.log('---main', main);
 		setMain({
 			avgsTableContent,
 			goalsTableColumns,

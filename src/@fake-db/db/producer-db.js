@@ -1168,7 +1168,7 @@ const producerAppDB = {
           },
           {
             id: 8,
-            value: "Fire@Fire Bonus",
+            value: "Fire@Auto Bonus",
             type: true,
             color: "",
             startAdornment: "$",
@@ -1197,7 +1197,7 @@ const producerAppDB = {
           },
           {
             id: 12,
-            value: "Life@Life Bonus",
+            value: "Life@Auto Bonus",
             type: true,
             color: "",
             startAdornment: "$",
@@ -1219,7 +1219,7 @@ const producerAppDB = {
           },
           {
             id: 16,
-            value: "Health@Health Bonus",
+            value: "Health@Auto Bonus",
             type: true,
             color: "",
             startAdornment: "$",
@@ -1241,7 +1241,7 @@ const producerAppDB = {
           },
           {
             id: 20,
-            value: "Bank@Bank Bonus",
+            value: "Bank@Auto Bonus",
             type: true,
             color: "",
             startAdornment: "$",
@@ -1263,7 +1263,7 @@ const producerAppDB = {
           },
           {
             id: 24,
-            value: "Total@Total Bonus",
+            value: "Total@Auto Bonus",
             type: true,
             color: "",
             startAdornment: "$",

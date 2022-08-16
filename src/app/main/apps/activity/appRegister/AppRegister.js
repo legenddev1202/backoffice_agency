@@ -5,7 +5,7 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import FuseAnimateGroup from '@fuse/core/FuseAnimateGroup';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider , makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 import Tab from '@material-ui/core/Tab';
@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import FuseLoading from '@fuse/core/FuseLoading';
 import withReducer from 'app/store/withReducer';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
+
 import _ from '@lodash';
 import reducer from '../store';
 import Table from '../../../components/widgets/Table';
@@ -85,10 +85,11 @@ function AppRegister(props) {
 								temp[i]['Date Product Is Written'] = formattedDate(new Date(item.datePolicyIsWritten));
 								temp[i]['Date Product Is Issued'] = formattedDate(new Date(item.datePolicyIsIssued));
 								temp[i]['Product Line'] = entryNames[entryName];
-								temp[i]['Product Type'] = item['typeOfProduct'];
-								temp[i]['Marketing Source'] = item['sourceOfBusiness'];
-								temp[i]['Product Dollars'] = `$${item['policyPremium']}`;
-								temp[i]['Bonus'] = `$${item['dollarBonus']}`;
+								temp[i]['Product Type'] = item.typeOfProduct;
+								temp[i].User = user.data.displayName;
+								temp[i]['Marketing Source'] = item.sourceOfBusiness;
+								temp[i]['Product Dollars'] = `$${item.policyPremium}`;
+								temp[i].Bonus = `$${item.dollarBonus}`;
 								temp[i]['Month Written'] = writtenMonth;
 								temp[i]['Month Issued'] = issuedMonth;
 								i++;
@@ -98,7 +99,7 @@ function AppRegister(props) {
 				});
 			});
 		}
-		//console.log('--------------------temp=', temp);
+		// console.log('--------------------temp=', temp);
 		if (temp.length > 0) {
 			if (period === 'Quarter 1 Totals') {
 				temp = _.filter(
@@ -139,7 +140,7 @@ function AppRegister(props) {
 	useEffect(() => {
 		if (!_.isEmpty(widgets) && !_.isEmpty(main)) {
 			if (widgets.Activity_AppRegister_Table) {
-				let rows = [];
+				const rows = [];
 				main.map((item, n) => {
 					rows.push({ id: n + 1, value: n + 1, color: '' });
 					Object.keys(item).map(key => {
@@ -167,14 +168,14 @@ function AppRegister(props) {
 						...widgets.Activity_AppRegister_Table,
 						table: {
 							...widgets.Activity_AppRegister_Table.table,
-							rows: rows
+							rows
 						}
 					}
 				};
 			}
 		}
 
-		//console.log('-----Widgets=', widgets);
+		// console.log('-----Widgets=', widgets);
 		setData({ widgets });
 	}, [widgets, main]);
 

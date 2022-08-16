@@ -196,7 +196,7 @@ const navigationConfig = [
           },
           {
             id: "possible-money",
-            title: "Agency (Possible Money)",
+            title: "Agency(Possible Money)",
             type: "item",
             url: "/apps/agency/possible-money",
             exact: true,

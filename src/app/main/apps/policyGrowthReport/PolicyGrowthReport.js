@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-let months = [
+const months = [
 	'January',
 	'February',
 	'March',
@@ -59,7 +59,7 @@ let months = [
 ];
 
 function arrayJSON(json) {
-	var tempRows = {};
+	let tempRows = {};
 	Object.keys(rows).map(month => {
 		Object.keys(rows[month]).map(policy => {
 			tempRows = {
@@ -90,7 +90,7 @@ function ProjectDashboardApp(props) {
 		autoRows: rows,
 		numberRows: numberrows,
 		percentRows: percentrows,
-		householdRows: householdRows,
+		householdRows,
 		graphData: widgets.widget5,
 		monthlyAgencyLapseAutoBonus: [],
 		monthlyAgencyLapseFireBonus: []
@@ -104,8 +104,8 @@ function ProjectDashboardApp(props) {
 
 	useEffect(() => {
 		if (projects.length > 0) {
-			var alignedJSON = arrayJSON(projects[0]);
-			var { numberRows, percentRows, perHouseHoldRows } = updateData(alignedJSON);
+			const alignedJSON = arrayJSON(projects[0]);
+			const { numberRows, percentRows, perHouseHoldRows } = updateData(alignedJSON);
 		}
 	}, [projects]);
 
@@ -120,13 +120,13 @@ function ProjectDashboardApp(props) {
 				if (item.includes('monthlyAgencyLapseAutoBonus')) {
 					const tempData = [];
 					Object.keys(contacts[0].monthlyAgencyLapseAutoBonus).map(i => {
-						tempData.push(contacts[0]['monthlyAgencyLapseAutoBonus'][i]);
+						tempData.push(contacts[0].monthlyAgencyLapseAutoBonus[i]);
 					});
 					tempJSON = { ...tempJSON, monthlyAgencyLapseAutoBonus: tempData };
 				} else if (item.includes('monthlyAgencyLapseFireBonus')) {
 					const tempData = [];
 					Object.keys(contacts[0].monthlyAgencyLapseFireBonus).map(i => {
-						tempData.push(contacts[0]['monthlyAgencyLapseFireBonus'][i]);
+						tempData.push(contacts[0].monthlyAgencyLapseFireBonus[i]);
 					});
 					tempJSON = { ...tempJSON, monthlyAgencyLapseFireBonus: tempData };
 				}
@@ -161,24 +161,24 @@ function ProjectDashboardApp(props) {
 	}
 
 	function handleChangeValue(value, month, field, title) {
-		let monthIndex = months.indexOf(month);
+		const monthIndex = months.indexOf(month);
 
 		if (title === 'Policy Count') {
-			let total =
+			const total =
 				parseFloat((field === 'auto' ? value : parseInt(state.autoRows[month].auto.value)) || 0) +
 				parseFloat((field === 'fire' ? value : parseInt(state.autoRows[month].fire.value)) || 0) +
 				parseFloat((field === 'life' ? value : parseInt(state.autoRows[month].life.value)) || 0) +
 				parseFloat((field === 'health' ? value : parseInt(state.autoRows[month].health.value)) || 0);
-			let temp = {
+			const temp = {
 				...state.autoRows,
 				[month]: {
 					...state.autoRows[month],
-					[field]: { ...state.autoRows[month][field], value: value },
+					[field]: { ...state.autoRows[month][field], value },
 					total: { ...state.autoRows[month].total, value: total }
 				}
 			};
 			
-			var { numberRows, percentRows, perHouseHoldRows } = updateData(temp);
+			const { numberRows, percentRows, perHouseHoldRows } = updateData(temp);
 			dispatch(saveProduct({ temp, numberRows, percentRows, perHouseHoldRows }));
 			// let numberRows = {
 			// 	...temp,
@@ -194,7 +194,74 @@ function ProjectDashboardApp(props) {
 	}
 
 	function updateData(temp) {
-		let numberRows = {
+		const monthAutoNumberChange = parseInt(temp.January.auto.value ? temp.January.auto.value - temp['31-Dec'].auto.value : 0, 10)+
+		parseInt(temp.February.auto.value ? temp.February.auto.value - temp.January.auto.value : 0, 10) +					 
+		parseInt(temp.March.auto.value ? temp.March.auto.value - temp.February.auto.value : 0, 10) +
+		parseInt(temp.April.auto.value ? temp.April.auto.value - temp.March.auto.value : 0, 10) +
+		parseInt(temp.May.auto.value ? temp.May.auto.value - temp.April.auto.value : 0, 10) +
+		parseInt(temp.June.auto.value ? temp.June.auto.value - temp.May.auto.value : 0, 10) +
+		parseInt(temp.July.auto.value ? temp.July.auto.value - temp.June.auto.value : 0, 10) +
+		parseInt(temp.August.auto.value ? temp.August.auto.value - temp.July.auto.value : 0, 10) +
+		parseInt(temp.September.auto.value ? temp.September.auto.value - temp.August.auto.value : 0, 10) +
+		parseInt(temp.October.auto.value ? temp.October.auto.value - temp.September.auto.value : 0, 10) +
+		parseInt(temp.November.auto.value ? temp.November.auto.value - temp.October.auto.value : 0 , 10)+
+		parseInt(temp.December.auto.value ? temp.December.auto.value - temp.November.auto.value : 0, 10) 
+
+		const monthFireNumberChange =  parseInt(temp.January.fire.value ? temp.January.fire.value - temp['31-Dec'].fire.value : 0, 10)+
+		parseInt(temp.February.fire.value ? temp.February.fire.value - temp.January.fire.value : 0, 10) +					 
+		parseInt(temp.March.fire.value ? temp.March.fire.value - temp.February.fire.value : 0, 10) +
+		parseInt(temp.April.fire.value ? temp.April.fire.value - temp.March.fire.value : 0, 10) +
+		parseInt(temp.May.fire.value ? temp.May.fire.value - temp.April.fire.value : 0, 10) +
+		parseInt(temp.June.fire.value ? temp.June.fire.value - temp.May.fire.value : 0, 10) +
+		parseInt(temp.July.fire.value ? temp.July.fire.value - temp.June.fire.value : 0, 10) +
+		parseInt(temp.August.fire.value ? temp.August.fire.value - temp.July.fire.value : 0, 10) +
+		parseInt(temp.September.fire.value ? temp.September.fire.value - temp.August.fire.value : 0, 10) +
+		parseInt(temp.October.fire.value ? temp.October.fire.value - temp.September.fire.value : 0, 10) +
+		parseInt(temp.November.fire.value ? temp.November.fire.value - temp.October.fire.value : 0 , 10)+
+		parseInt(temp.December.fire.value ? temp.December.fire.value - temp.November.fire.value : 0, 10) 
+
+		const monthLifeNumberChange = parseInt(temp.January.life.value ? temp.January.life.value - temp['31-Dec'].life.value : 0, 10)+
+		parseInt(temp.February.life.value ? temp.February.life.value - temp.January.life.value : 0, 10) +					 
+		parseInt(temp.March.life.value ? temp.March.life.value - temp.February.life.value : 0, 10) +
+		parseInt(temp.April.life.value ? temp.April.life.value - temp.March.life.value : 0, 10) +
+		parseInt(temp.May.life.value ? temp.May.life.value - temp.April.life.value : 0, 10) +
+		parseInt(temp.June.life.value ? temp.June.life.value - temp.May.life.value : 0, 10) +
+		parseInt(temp.July.life.value ? temp.July.life.value - temp.June.life.value : 0, 10) +
+		parseInt(temp.August.life.value ? temp.August.life.value - temp.July.life.value : 0, 10) +
+		parseInt(temp.September.life.value ? temp.September.life.value - temp.August.life.value : 0, 10) +
+		parseInt(temp.October.life.value ? temp.October.life.value - temp.September.life.value : 0, 10) +
+		parseInt(temp.November.life.value ? temp.November.life.value - temp.October.life.value : 0 , 10)+
+		parseInt(temp.December.life.value ? temp.December.life.value - temp.November.life.value : 0, 10) 
+
+		const monthHealthNumberChange = parseInt(temp.January.health.value ? temp.January.health.value - temp['31-Dec'].health.value : 0, 10)+
+		parseInt(temp.February.health.value ? temp.February.health.value - temp.January.health.value : 0, 10) +					 
+		parseInt(temp.March.health.value ? temp.March.health.value - temp.February.health.value : 0, 10) +
+		parseInt(temp.April.health.value ? temp.April.health.value - temp.March.health.value : 0, 10) +
+		parseInt(temp.May.health.value ? temp.May.health.value - temp.April.health.value : 0, 10) +
+		parseInt(temp.June.health.value ? temp.June.health.value - temp.May.health.value : 0, 10) +
+		parseInt(temp.July.health.value ? temp.July.health.value - temp.June.health.value : 0, 10) +
+		parseInt(temp.August.health.value ? temp.August.health.value - temp.July.health.value : 0, 10) +
+		parseInt(temp.September.health.value ? temp.September.health.value - temp.August.health.value : 0, 10) +
+		parseInt(temp.October.health.value ? temp.October.health.value - temp.September.health.value : 0, 10) +
+		parseInt(temp.November.health.value ? temp.November.health.value - temp.October.health.value : 0 , 10)+
+		parseInt(temp.December.health.value ? temp.December.health.value - temp.November.health.value : 0, 10) 
+
+		const monthHHS = parseInt(temp.January.hhs.value ? temp.January.hhs.value - temp['31-Dec'].hhs.value : 0, 10) +
+		parseInt(temp.February.hhs.value ? temp.February.hhs.value - temp.January.hhs.value : 0, 10)+
+		parseInt(temp.March.hhs.value ? temp.March.hhs.value - temp.February.hhs.value : 0, 10)+
+		parseInt(temp.April.hhs.value ? temp.April.hhs.value - temp.March.hhs.value : 0, 10)+
+		parseInt(temp.May.hhs.value ? temp.May.hhs.value - temp.April.hhs.value : 0, 10)+
+		parseInt(temp.June.hhs.value ? temp.June.hhs.value - temp.May.hhs.value : 0, 10)+
+		parseInt(temp.July.hhs.value ? temp.July.hhs.value - temp.June.hhs.value : 0, 10)+
+		parseInt(temp.August.hhs.value ? temp.August.hhs.value - temp.July.hhs.value : 0, 10)+
+		parseInt(temp.September.hhs.value ? temp.September.hhs.value - temp.August.hhs.value : 0, 10)+
+		parseInt(temp.October.hhs.value ? temp.October.hhs.value - temp.September.hhs.value : 0, 10)+
+		parseInt(temp.November.hhs.value ? temp.November.hhs.value - temp.October.hhs.value : 0, 10)+
+		parseInt(temp.December.hhs.value ? temp.December.hhs.value - temp.November.hhs.value : 0, 10)
+
+
+		
+		const numberRows = {
 			'31-Dec': {
 				month: {
 					id: 'month',
@@ -202,27 +269,30 @@ function ProjectDashboardApp(props) {
 				},
 				auto: {
 					id: 'auto',
-					value: temp.January.auto.value ? temp.January.auto.value - temp['31-Dec'].auto.value : 0
+					value:  monthAutoNumberChange
 				},
 				fire: {
 					id: 'fire',
-					value: temp.January.fire.value ? temp.January.fire.value - temp['31-Dec'].fire.value : 0
+					value: monthFireNumberChange
 				},
 				life: {
 					id: 'life',
-					value: temp.January.life.value ? temp.January.life.value - temp['31-Dec'].life.value : 0
+					value: monthLifeNumberChange
 				},
 				health: {
 					id: 'health',
-					value: temp.January.health.value ? temp.January.health.value - temp['31-Dec'].health.value : 0
+					value: monthHealthNumberChange
 				},
 				total: {
 					id: 'total',
-					value: temp.January.total.value ? temp.January.total.value - temp['31-Dec'].total.value : 0
+					value: 	monthAutoNumberChange +
+							monthFireNumberChange +
+							monthLifeNumberChange +
+							monthHealthNumberChange
 				},
 				hhs: {
 					id: 'hhs',
-					value: temp.January.hhs.value ? temp.January.hhs.value - temp['31-Dec'].hhs.value : 0
+					value: monthHHS
 				}
 			},
 			January: {
@@ -587,7 +657,10 @@ function ProjectDashboardApp(props) {
 			}
 		};
 
-		let percentRows = {
+
+
+
+		const percentRows = {
 			'31-Dec': {
 				month: {
 					id: 'month',
@@ -595,26 +668,26 @@ function ProjectDashboardApp(props) {
 				},
 				auto: {
 					id: 'auto',
-					value: temp.January.auto.value
-						? percentValue(temp.January.auto.value, temp['31-Dec'].auto.value)
+					value: temp['31-Dec'].auto.value
+						? percentYTDValue(monthAutoNumberChange, temp['31-Dec'].auto.value)
 						: 0
 				},
 				fire: {
 					id: 'fire',
-					value: temp.January.fire.value
-						? percentValue(temp.January.fire.value, temp['31-Dec'].fire.value)
+					value: temp['31-Dec'].fire.value
+						? percentYTDValue(monthFireNumberChange, temp['31-Dec'].fire.value)
 						: 0
 				},
 				life: {
 					id: 'life',
-					value: temp.January.life.value
-						? percentValue(temp.January.life.value, temp['31-Dec'].life.value)
+					value: temp['31-Dec'].life.value
+						? percentYTDValue(monthLifeNumberChange, temp['31-Dec'].life.value)
 						: 0
 				},
 				health: {
 					id: 'health',
-					value: temp.January.health.value
-						? percentValue(temp.January.health.value, temp['31-Dec'].health.value)
+					value: temp['31-Dec'].health.value
+						? percentYTDValue(monthHealthNumberChange, temp['31-Dec'].health.value)
 						: 0
 				},
 				total: {
@@ -625,7 +698,7 @@ function ProjectDashboardApp(props) {
 				},
 				hhs: {
 					id: 'hhs',
-					value: temp.January.hhs.value ? percentValue(temp.January.hhs.value, temp['31-Dec'].hhs.value) : 0
+					value: temp['31-Dec'].hhs.value ? percentYTDValue(monthHHS, temp['31-Dec'].hhs.value) : 0
 				}
 			},
 			January: {
@@ -1052,7 +1125,7 @@ function ProjectDashboardApp(props) {
 			}
 		};
 
-		let perHouseHoldRows = {
+		const perHouseHoldRows = {
 			'31-Dec': {
 				month: {
 					id: 'month',
@@ -1450,8 +1523,8 @@ function ProjectDashboardApp(props) {
 		setState({
 			...state,
 			autoRows: temp,
-			numberRows: numberRows,
-			percentRows: percentRows,
+			numberRows,
+			percentRows,
 			householdRows: perHouseHoldRows,
 			graphData: widgets.widget5
 		});
@@ -1464,19 +1537,27 @@ function ProjectDashboardApp(props) {
 	}
 
 	function percentValue(value1, value2) {
-		if (value2!=0) {
+		if (parseFloat(value2)!==0) {
 			if(Math.round(((value1 - value2) / value2) * 10000) / 100!==-100){
-				return String(Math.round(((value1 - value2) / value2) * 10000) / 100) + '%';
-			} else {
+				return `${String(Math.round(((value1 - value2) / value2) * 10000) / 100)  }%`;
+			} 
 				return ""
-			}
-		} else if (!value1 && !value2) {
+			
+		} if (!value1 && !value2) {
 			return '';
-		} else if (!value2) {
+		} if (!value2) {
 			return '';
-		} else {
+		} 
 			return '';
+		
+	}
+
+	function percentYTDValue(value1, value2) {
+		if(value1&&value2){
+			return `${Math.round(value1/value2*10000)/100}%`
 		}
+		return "";
+		
 	}
 
 	function houseHoldValue(value1, value2) {

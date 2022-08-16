@@ -58,9 +58,9 @@ export default function SimpleCard(props) {
 
 								<Typography variant="subtitle1" color="textSecondary">
 									/
-									{props.currentSubscription.items.data[0].plan.interval_count +
-										' ' +
-										props.currentSubscription.items.data[0].plan.interval}
+									{`${props.currentSubscription.items.data[0].plan.interval_count 
+										} ${ 
+										props.currentSubscription.items.data[0].plan.interval}`}
 								</Typography>
 							</>
 						)}
@@ -68,6 +68,9 @@ export default function SimpleCard(props) {
 				</div>
 				{/* {Object.keys(props.currentSubscription).length > 0 && props.currentSubscription.items.data.length > 1 && ( */}
 				<div className="flex items-center">
+				<Typography variant="subtitle1" className="">
+						(
+					</Typography>
 					<TextField
 						className="h-50"
 						id="outlined-basic"
@@ -75,10 +78,10 @@ export default function SimpleCard(props) {
 						variant="outlined"
 						// type="number"
 						value={quantity}
-						onChange={e => setQuantity(e.target.value)}
+						onChange={e => setQuantity(quantity)}
 					/>
 					<Typography variant="subtitle1" className="">
-						* $25 / 1 month
+						/4 seats) * ($25 / 4 seats)
 					</Typography>
 				</div>
 				{/* )} */}
@@ -124,7 +127,7 @@ export default function SimpleCard(props) {
 						color="secondary"
 						className="w-128"
 						onClick={() => {
-							if (quantity > 0) props.setBuy(props.secondSubscription, quantity);
+							if (quantity > 0) props.setBuy(props.secondSubscription, (Math.round(parseInt(quantity, 10)/4)*(25/4)*100)/100);
 						}}
 					>
 						Update Plan

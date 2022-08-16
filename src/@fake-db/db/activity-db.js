@@ -48,9 +48,18 @@ const activityAppDB = {
             disablePadding: false,
             sort: true,
           },
+          
           {
             id: "Product Type",
             value: "Product Type",
+            type: false,
+            color: "",
+            disablePadding: false,
+            sort: true,
+          },
+          {
+            id: "User",
+            value: "User",
             type: false,
             color: "",
             disablePadding: false,

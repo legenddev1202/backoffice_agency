@@ -12,6 +12,8 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import withReducer from 'app/store/withReducer';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from '@lodash';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import reducer from '../store';
 import Table from '../../../components/widgets/Table';
 import Chart from '../../../components/widgets/BarChart';
@@ -27,8 +29,6 @@ import { getVision, selectVision } from '../store/visionSlice';
 import { colors, policies, months, Options as options } from '../../../utils/Globals';
 import { dividing, getMain } from '../../../utils/Function';
 
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 
 const belongTo = localStorage.getItem('@BELONGTO');
 const UID = localStorage.getItem('@UID');
@@ -42,7 +42,7 @@ function StaffSources(props) {
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState({ widgets });
 	const [main, setMain] = useState({});
-	//const [year, setYear] = useState(moment().format('yyyy'));
+	// const [year, setYear] = useState(moment().format('yyyy'));
 	const [period, setPeriod] = useState(moment().format('MMMM'));
 	const [production, setProduction] = useState("Show Written Production");
 	const [user, setUser] = useState(UID);
@@ -59,7 +59,7 @@ function StaffSources(props) {
 	}, [dispatch, date]);
 
 	useEffect(() => { 
-		var temp = [];
+		const temp = [];
 		if (users.length > 0) {
 			users.map(user => {
 				if(user.belongTo === UID)
@@ -81,19 +81,19 @@ function StaffSources(props) {
 			// Producer_StaffSources_Auto_Table
 			if(widgets.Producer_StaffSources_Auto_Table) {
 				policies.map(policy => {			
-					let tableRows = [{ 
+					const tableRows = [{ 
 						id: 'total',
 						value: 'Total',
 						color: '',
 						border: 'border-b-4'
 					}];
-					let tableHeaders = [{
+					const tableHeaders = [{
 						id: 'producer',
 						value: 'Producer',
 						color: '',
 						border: ''
 					}];
-					let tableContent = {};
+					const tableContent = {};
 	
 					Object.keys(marketings).map((key) => {		
 						const item = marketings[key];
@@ -109,7 +109,7 @@ function StaffSources(props) {
 						color: '' 
 					});
 	
-					tableContent["Total"] = {};
+					tableContent.Total = {};
 					users.map((user) => {
 						if(user.belongTo === UID) {
 							tableRows.push({ 
@@ -126,17 +126,17 @@ function StaffSources(props) {
 								tableContent[user.data.displayName][marketing.marketingName] = 
 									main[production][period][user.id][policy.value][marketing.marketingName];												
 								total += tableContent[user.data.displayName][marketing.marketingName];
-								if(!tableContent['Total'].hasOwnProperty(marketing.marketingName)) {
-									tableContent['Total'][marketing.marketingName] = 0;
+								if(!tableContent.Total.hasOwnProperty(marketing.marketingName)) {
+									tableContent.Total[marketing.marketingName] = 0;
 								}
-								tableContent['Total'][marketing.marketingName] += tableContent[user.data.displayName][marketing.marketingName]
+								tableContent.Total[marketing.marketingName] += tableContent[user.data.displayName][marketing.marketingName]
 							});
-							tableContent[user.data.displayName]['Total'] = total;
+							tableContent[user.data.displayName].Total = total;
 	
-							if(!tableContent['Total'].hasOwnProperty('Total')) {
-								tableContent['Total']['Total'] = 0;
+							if(!tableContent.Total.hasOwnProperty('Total')) {
+								tableContent.Total.Total = 0;
 							}
-							tableContent['Total']['Total'] += total;
+							tableContent.Total.Total += total;
 						}				
 					});			
 	
@@ -165,15 +165,14 @@ function StaffSources(props) {
 					widgets = {
 						...widgets, [`Producer_StaffSources_${policy.value}_Table`]: {
 							...widgets[`Producer_StaffSources_${policy.value}_Table`], table: {
-								...widgets[`Producer_StaffSources_${policy.value}_Table`].table, tableContent: 
-									tableContent							
+								...widgets[`Producer_StaffSources_${policy.value}_Table`].table, tableContent							
 							}
 						}
 					}
 				});	
 
 				// Total Table
-				let tableContent = {}
+				const tableContent = {}
 				Object.keys(widgets.Producer_StaffSources_Total_Table.table.tableContent).map(row => {
 					tableContent[row] = {};
 					Object.keys(widgets.Producer_StaffSources_Total_Table.table.tableContent[row]).map(col => {
@@ -186,8 +185,7 @@ function StaffSources(props) {
 				widgets = {
 					...widgets, Producer_StaffSources_Total_Table: {
 						...widgets.Producer_StaffSources_Total_Table, table: {
-							...widgets.Producer_StaffSources_Total_Table.table, tableContent: 
-							tableContent							
+							...widgets.Producer_StaffSources_Total_Table.table, tableContent							
 						}
 					}
 				}	
@@ -195,13 +193,13 @@ function StaffSources(props) {
 		
 			// Producer_StaffSources_SourcesOfBusiness_Chart
 			if(widgets.Producer_StaffSources_SourcesOfBusiness_Chart) {
-				let tempDatasets = [];
+				const tempDatasets = [];
 				Object.keys(widgets.Producer_StaffSources_Total_Table.table.tableContent).map((row, n) => {
 					if(row !== 'Total') {
-						let tempData = [];
+						const tempData = [];
 						Object.keys(widgets.Producer_StaffSources_Total_Table.table.tableContent[row]).map(col => {
 							if(col !== 'Total') {
-								tempData.push(widgets[`Producer_StaffSources_Total_Table`].table.tableContent[row][col]);
+								tempData.push(widgets.Producer_StaffSources_Total_Table.table.tableContent[row][col]);
 							}
 						});
 						tempDatasets.push({
@@ -227,8 +225,8 @@ function StaffSources(props) {
 					}
 				};
 
-				let tempXAxes = [];
-				let tempLabels = [];
+				const tempXAxes = [];
+				const tempLabels = [];
 				let temp = widgets.Producer_StaffSources_SourcesOfBusiness_Chart.mainChart.options.scales.xAxes[0];
 				Object.keys(marketings).map((key) => { 
 					const marketing = marketings[key];
@@ -254,8 +252,8 @@ function StaffSources(props) {
 
 			// Producer_StaffSources_ViewGrid_Table
 			if(widgets.Producer_StaffSources_ViewGrid_Table && user!=='') {
-				let tableContent = { 'Total': {} };
-				let tableRows = [{
+				const tableContent = { 'Total': {} };
+				const tableRows = [{
 					id: 'total', 
 					value: 'Total', 
 					type: true,
@@ -263,7 +261,7 @@ function StaffSources(props) {
 					border: 'border-b-4' 
 				}];
 
-				tableContent['Total']['Total'] = 0;
+				tableContent.Total.Total = 0;
 				Object.keys(marketings).map((key) => {		
 					const marketing = marketings[key];
 					tableRows.push({
@@ -273,19 +271,19 @@ function StaffSources(props) {
 					});
 
 					tableContent[marketing.marketingName] = {};
-					tableContent[marketing.marketingName]['Total'] = 0;
+					tableContent[marketing.marketingName].Total = 0;
 					policies.slice(0, 5).map(policy => {
 						tableContent[marketing.marketingName][policy.value] = 0;						
 						months.map(month => {					
 							tableContent[marketing.marketingName][policy.value] += main[production][month.value][user][policy.value][marketing.marketingName];							
 						});
-						if(!tableContent['Total'].hasOwnProperty(policy.value)) {
-							tableContent['Total'][policy.value] = 0;
+						if(!tableContent.Total.hasOwnProperty(policy.value)) {
+							tableContent.Total[policy.value] = 0;
 						}
-						tableContent['Total'][policy.value] += tableContent[marketing.marketingName][policy.value];
-						tableContent[marketing.marketingName]['Total'] += tableContent[marketing.marketingName][policy.value];
+						tableContent.Total[policy.value] += tableContent[marketing.marketingName][policy.value];
+						tableContent[marketing.marketingName].Total += tableContent[marketing.marketingName][policy.value];
 					});
-					tableContent['Total']['Total'] += tableContent[marketing.marketingName]['Total'];
+					tableContent.Total.Total += tableContent[marketing.marketingName].Total;
 				});	
 				
 				widgets = {
@@ -299,8 +297,7 @@ function StaffSources(props) {
 				widgets = {
 					...widgets, Producer_StaffSources_ViewGrid_Table: {
 						...widgets.Producer_StaffSources_ViewGrid_Table, table: {
-							...widgets.Producer_StaffSources_ViewGrid_Table.table, tableContent:
-								tableContent
+							...widgets.Producer_StaffSources_ViewGrid_Table.table, tableContent
 						}
 					}
 				};
@@ -308,18 +305,18 @@ function StaffSources(props) {
 
 			// Producer_StaffSources_ProductSales_PieChart
 			if(widgets.Producer_StaffSources_ProductSales_PieChart && user!=='') {		
-				let tempDatasets = [];
-				let tempLabels = [];
-				let tempData = [];
-				let tempBackgroundColor = [];
-				let tempHoverBackgroundColor = [];
-				const tableContent = widgets.Producer_StaffSources_ViewGrid_Table.table.tableContent;
+				const tempDatasets = [];
+				const tempLabels = [];
+				const tempData = [];
+				const tempBackgroundColor = [];
+				const tempHoverBackgroundColor = [];
+				const {tableContent} = widgets.Producer_StaffSources_ViewGrid_Table.table;
 
 				Object.keys(marketings).map((key, n) => {
 					const marketing = marketings[key];	
 
 					const value = dividing(
-						tableContent[marketing.marketingName]['Total'] *100, tableContent['Total']['Total']
+						tableContent[marketing.marketingName].Total *100, tableContent.Total.Total
 					);
 					if(value > 0) {
 						tempLabels.push(marketing.marketingName);
@@ -357,16 +354,16 @@ function StaffSources(props) {
 			
 			// Producer_StaffSources_Production_PieChart
 			if(widgets.Producer_StaffSources_Production_PieChart && user!=='') {		
-				let tempDatasets = [];
-				let tempLabels = [];
-				let tempData = [];
-				let tempBackgroundColor = [];
-				let tempHoverBackgroundColor = [];
-				const tableContent = widgets.Producer_StaffSources_ViewGrid_Table.table.tableContent;
+				const tempDatasets = [];
+				const tempLabels = [];
+				const tempData = [];
+				const tempBackgroundColor = [];
+				const tempHoverBackgroundColor = [];
+				const {tableContent} = widgets.Producer_StaffSources_ViewGrid_Table.table;
 
 				policies.slice(0, 5).map((policy, n) => {					
 					const value = dividing(
-						tableContent['Total'][policy.value] *100, tableContent['Total']['Total']
+						tableContent.Total[policy.value] *100, tableContent.Total.Total
 					);
 					if(value > 0) {
 						tempLabels.push(policy.value);

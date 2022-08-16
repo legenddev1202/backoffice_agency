@@ -58,7 +58,7 @@ function GoalsAndActual(props) {
 			setMain(temp);
 		} else {setMain({})}
 	}, [entries, users, vision]);
-	
+
 	useEffect(() => {	
 		if(!_.isEmpty(widgets) && !_.isEmpty(main)) {
 			// Producer_GoalsAndActual_AgencyGoals_Table
