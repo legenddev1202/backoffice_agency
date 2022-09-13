@@ -394,10 +394,10 @@ function IncomeGoals(props) {
 				goalsTableContent[months1[i]][goalCols[col + skipCol + 1]] = value1;
 				if (col === 0) {
 					bonusesTableContent[months1[i]][bonusCols[col]] =
-						(value1 * avgsTableContent['Average Bonus'][avgCols[col]]) / (2 * 100);
+						(value1 * avgsTableContent['Average Commission'][avgCols[col]]) / (2 * 100);
 				} else {
 					bonusesTableContent[months1[i]][bonusCols[col]] =
-						(value1 * avgsTableContent['Average Bonus'][avgCols[col]]) / 100;
+						(value1 * avgsTableContent['Average Commission'][avgCols[col]]) / 100;
 				}
 				const level = getLevel(goalsTableContent[months1[i]][goalCols[col]], policies[col].value, bonusPlans);
 

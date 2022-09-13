@@ -16,6 +16,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import {
 	removeContact,
 	updateContact,
@@ -24,7 +25,6 @@ import {
 	closeEditContactDialog,
 	setTempData
 } from './store/bonusPlanSlice';
-import MenuItem from '@material-ui/core/MenuItem';
 import { selectTypeProduct } from './store/productTypeSlice';
 
 const defaultFormState = {
@@ -45,10 +45,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function makeid(length) {
-	var result           = '';
-	var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	var charactersLength = characters.length;
-	for ( var i = 0; i < length; i++ ) {
+	let result           = '';
+	const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const charactersLength = characters.length;
+	for ( let i = 0; i < length; i++ ) {
 	   result += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	return result;
@@ -62,7 +62,7 @@ function ContactDialog(props) {
 	const { form, handleChange, setForm } = useForm(defaultFormState);
 	const [productTypeList, setProductType] = React.useState([]);
 	useEffect(() => {
-		var tempProductType = [];
+		const tempProductType = [];
 
 		if (productType.length > 0) {
 			productType.map(item => {
@@ -206,7 +206,7 @@ function ContactDialog(props) {
 							label="%"
 							id="percent"
 							name="percent"
-							value={Number.parseFloat(form.percent).toFixed(2)}
+							value={form.percent}
 							onChange={handleChange}
 							variant="outlined"
 							// type="number"

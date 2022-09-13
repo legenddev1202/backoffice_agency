@@ -11,9 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
 import clsx from 'clsx';
+import { useDispatch, useSelector } from 'react-redux';
 import ContactsTablePaginationActions from './BonusPlanTablePaginationActions';
 import { openNewContactDialog } from './store/bonusPlanSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
 const EnhancedTable = ({ columns, data, onRowClick, title, id }) => {
 	const showAutoTargetAmount = useSelector(
@@ -192,7 +192,12 @@ const EnhancedTable = ({ columns, data, onRowClick, title, id }) => {
 													id==='individualLifeTargetBonus' ||
 													id==='individualHealthTargetBonus' ||
 													id==='individualBankTargetBonus')) &&
-													Number.parseFloat(cell.render('Cell').props.row.original.amount).toFixed(2)) 
+													((showAutoTargetAmount&&id==='individualAutoTargetBonus')?Number.parseFloat(cell.render('Cell').props.row.original.dollar).toFixed(2):
+													(showFireTargetAmount&&id==='individualFireTargetBonus')?Number.parseFloat(cell.render('Cell').props.row.original.dollar).toFixed(2):
+													(showLifeTargetAmount&&id==='individualLifeTargetBonus')?Number.parseFloat(cell.render('Cell').props.row.original.dollar).toFixed(2):
+													(showHealthTargetAmount&&id==='individualHealthTargetBonus')?Number.parseFloat(cell.render('Cell').props.row.original.dollar).toFixed(2):
+													(showBankTargetAmount&&id==='individualBankTargetBonus')?Number.parseFloat(cell.render('Cell').props.row.original.dollar).toFixed(2):
+													Number.parseFloat(cell.render('Cell').props.row.original.amount).toFixed(2))) 
 													|| cell.render('Cell')
 												}
 											{/* {console.log(cell.render('Cell'))} */}
@@ -204,7 +209,7 @@ const EnhancedTable = ({ columns, data, onRowClick, title, id }) => {
 														id === 'teamLifeTargetBonus' ||
 														id === 'teamHealthTargetBonus' ||
 														id === 'teamBankTargetBonus') &&
-													'%'}
+													'$'}
 												{cell.render('Cell').props.row.original.percent &&
 													index === 1 &&
 													id === 'monthlyAgencyLapseAutoBonus' &&

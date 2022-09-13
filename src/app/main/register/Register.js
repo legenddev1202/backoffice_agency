@@ -2,31 +2,31 @@ import FuseAnimate from '@fuse/core/FuseAnimate';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { darken } from '@material-ui/core/styles/colorManipulator';
-import { useParams } from 'react-router-dom';
+import { useParams , Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import FuseLoading from '@fuse/core/FuseLoading';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import CardElements from '../components/CardElements';
-import FirebaseRegisterTab from './tabs/FirebaseRegisterTab';
-import FirebaseRegisterTabAgency from './tabs/FirebaseRegisterTabAgency';
-import JWTRegisterTab from './tabs/JWTRegisterTab';
-import SubscriptionCard from './components/subscriptionCard';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
+
+import { CardElement, useStripe, useElements , Elements } from '@stripe/react-stripe-js';
+
 import { loadStripe } from '@stripe/stripe-js';
 import { firebaseFunctionGetProductsEndpoint } from 'app/fuse-configs/endpointConfig';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import { fade, ThemeProvider, withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
-import { registerWithFirebase } from 'app/auth/store/registerSlice';
-import { auth } from '../../../@fake-db/db/firebase';
+import { registerWithFirebase , registerError } from 'app/auth/store/registerSlice';
 import { useDispatch } from 'react-redux';
-import { registerError } from 'app/auth/store/registerSlice';
-import { realDb } from '../../../@fake-db/db/firebase';
+
 import history from '@history';
+import { auth , realDb } from '../../../@fake-db/db/firebase';
+
+import SubscriptionCard from './components/subscriptionCard';
+import JWTRegisterTab from './tabs/JWTRegisterTab';
+import FirebaseRegisterTabAgency from './tabs/FirebaseRegisterTabAgency';
+import FirebaseRegisterTab from './tabs/FirebaseRegisterTab';
+import CardElements from '../components/CardElements';
 
 const publicKeyTest =
 	'pk_test_51IFn0pAfN4Ms4oOXNtWGRfBvhbBdJ0zIV4bCiefjGeRgt8eMDfq7Cm4jovgdj5BfdQm2qbV6oL7jzgcQ13jQ70l800ocRcNzky';
@@ -74,17 +74,17 @@ function Register() {
 	const [count, setCount] = useState([]);
 	const routeParams = useParams(); 
 	function handleTabChange(token, item) {
-		console.log({ ...state, subscriptionStatus: true, token: token });
+		console.log({ ...state, subscriptionStatus: true, token });
 		let tempSeatSubscription = {};
 		count.map(item => {
-			if (item.nickname === 'seat') {
+			if (item.nickname === 'seat'&&item.active) {
 				tempSeatSubscription = { ...item };
 			}
 		});
 		setState({
 			...state,
 			showLoginForm: true,
-			token: token,
+			token,
 			showSubscriptionForm: false,
 			selectedSubscription: item,
 			seatSubscription: tempSeatSubscription
@@ -109,8 +109,8 @@ function Register() {
 	}
 
 	useEffect(() => {
-		const belongTo = routeParams.belongTo;
-		const email = routeParams.email;
+		const {belongTo} = routeParams;
+		const {email} = routeParams;
 		axios.post(`/api/auth/user/invitations`, { belongTo, email }).then(response => {
 			console.log('-----response', response.data);
 			history.push({ pathname: '/pages/errors/error-500' });
@@ -250,7 +250,7 @@ function Register() {
 									</div>
 								</FuseAnimate>
 
-								{selectedTab === 1 && <FirebaseRegisterTabAgency state={true} />}
+								{selectedTab === 1 && <FirebaseRegisterTabAgency state />}
 							</CardContent>
 
 							<div className="flex flex-col items-center justify-center pb-32">
@@ -276,12 +276,13 @@ function Register() {
 									<div className="flex">
 										{count.length > 0 &&
 											count.map(item => {
-												if (!item.nickname)
+												console.log(item)
+												if (!item.nickname&&item.active)
 													return (
 														<SubscriptionCard
 															setBuy={handleTabChange}
 															price={item.amount / 100}
-															interval={item.interval_count + ' ' + item.interval}
+															interval={`${item.interval_count  } ${  item.interval}`}
 															token={item.id}
 															nickname={item.nickname}
 															item={item}

@@ -178,7 +178,7 @@ function ContactDialog(props) {
 									id="amount"
 									name="amount"
 									type="number"
-									value={Number.parseFloat(form.amount).toFixed(2)}
+									value={form.amount}
 									onChange={handleChange}
 									variant="outlined"
 									fullWidth
