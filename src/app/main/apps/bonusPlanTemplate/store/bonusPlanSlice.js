@@ -14,9 +14,9 @@ export const getAutoBonus = createAsyncThunk(
 	// return { data, routeParams };
 	(routeParam, { getState }) =>
 		new Promise((resolve, reject) => {
-			var belongTo = localStorage.getItem('@BELONGTO');
-			var starCountRef = realDb.ref(`BonusPlanTemplate/${belongTo}/all`);
-			var bonusPlans = [];
+			const belongTo = localStorage.getItem('@BELONGTO');
+			const starCountRef = realDb.ref(`BonusPlanTemplate/${belongTo}/all`);
+			const bonusPlans = [];
 			starCountRef.on('value', snapshot => {
 				const data = snapshot.val();
 
@@ -65,7 +65,7 @@ export const removeContact = createAsyncThunk(
 	async (contact, { dispatch, getState }) => {
 		const response = await axios.post('/api/bonus-plan-template/remove-contact', { contact });
 		const data = await response.data;
-		var belongTo = localStorage.getItem('@BELONGTO');
+		const belongTo = localStorage.getItem('@BELONGTO');
 		realDb.ref(`BonusPlan/${belongTo}/${contact.routeParam}/${contact.planType}/${contact.id}`).remove();
 		dispatch(getAutoBonus(contact.routeParam));
 
@@ -325,13 +325,19 @@ const contactsSlice = createSlice({
 			};
 		},
 		closeEditTargetBonusDialog: (state, action) => {
+			console.log('==============state--------------', state)
 			state.targetBonusDialog = {
 				type: 'edit',
 				props: {
 					open: false
 				},
 				data: null
-			};
+			};			
+			// state.showAutoTargetAmount = action.payload.showAutoTargetAmount;
+			// state.showFireTargetAmount = action.payload.showFireTargetAmount;
+			// state.showLifeTargetAmount = action.payload.showLifeTargetAmount;
+			// state.showBankTargetAmount = action.payload.showBankTargetAmount;
+			// state.showHealthTargetAmount  = action.payload.showHealthTargetAmount;
 		},
 		closeEditTeamTargetBonusDialog: (state, action) => {
 			state.teamTargetBonusDialog = {
@@ -344,8 +350,14 @@ const contactsSlice = createSlice({
 		},
 		setTempData: (state, action) => {
 			state.tempData = {
-				...action.payload
+				...action.payload.form
 			};
+			
+			// state.showAutoTargetAmount = action.payload.showAutoTargetAmount;
+			// state.showFireTargetAmount = action.payload.showFireTargetAmount;
+			// state.showLifeTargetAmount = action.payload.showLifeTargetAmount;
+			// state.showBankTargetAmount = action.payload.showBankTargetAmount;
+			// state.showHealthTargetAmount  = action.payload.showHealthTargetAmount;
 		},
 		setAddTempData: (state, action) => {
 			state.addTempData = {

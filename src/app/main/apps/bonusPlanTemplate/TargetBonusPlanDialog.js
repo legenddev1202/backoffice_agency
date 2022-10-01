@@ -96,7 +96,9 @@ function ContactDialog(props) {
 		if (contactDialog.type === 'new') {
 			dispatch(addContact({ ...form, routeParam: props.routeParam }));
 		} else {
-			dispatch(setTempData({ ...form }));
+			console.log('----------------------------------',form)
+			console.log(showFireTargetAmount)
+			dispatch(setTempData({form: {...form},showAutoTargetAmount,showFireTargetAmount,showLifeTargetAmount, showBankTargetAmount,showHealthTargetAmount   }));
 		}
 		closeComposeDialog();
 	}

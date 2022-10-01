@@ -13,8 +13,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import { auth } from '../../../../@fake-db/db/firebase';
 import { showMessage } from 'app/store/fuse/messageSlice';
+import { auth } from '../../../../@fake-db/db/firebase';
 
 function FirebaseLoginTab(props) {
 	const dispatch = useDispatch();
@@ -56,12 +56,14 @@ function FirebaseLoginTab(props) {
 
 	const handleSent = () => {
 		auth.sendPasswordResetEmail(email)
-			.then(function (user) {
-				dispatch(showMessage({ message: "Please check your email..." }))
+			.then((user)=> {
+				console.log('----------------', user)
+				dispatch(showMessage({ message: "Please check your email... If you didn't revice the email. Please check the Spam folder." }))
 				setOpen(false);
 			})
 			.catch(function (e) {
-				dispatch(showMessage({ message: e }))
+				console.log('--------errrr--------', e)
+				dispatch(showMessage({ message: e.message }))
 				console.log(e);
 			});
 		
@@ -150,7 +152,7 @@ function FirebaseLoginTab(props) {
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
-					<DialogTitle id="alert-dialog-title">{'Did you forgot password?'}</DialogTitle>
+					<DialogTitle id="alert-dialog-title">Did you forgot password?</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
 						We will send link to your email
