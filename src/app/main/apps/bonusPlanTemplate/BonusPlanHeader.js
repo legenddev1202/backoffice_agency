@@ -11,22 +11,22 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import { Link , useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectMainTheme } from "app/store/fuse/settingsSlice";
-import { showMessage } from "app/store/fuse/messageSlice";
 import {
   getTemplateData,
   removeTemplate,
 } from "./store/bonusPlanTemplateSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectMainTheme } from "app/store/fuse/settingsSlice";
 import { getUserData } from "./store/userSlice";
-import { addContact, setTemplate , getAutoBonus } from "./store/bonusPlanSlice";
-
+import { addContact, setTemplate } from "./store/bonusPlanSlice";
+import { showMessage } from "app/store/fuse/messageSlice";
+import { useHistory } from "react-router-dom";
 import SelectBox from "../../components/SelectBox";
-
+import { getAutoBonus } from "./store/bonusPlanSlice";
 
 function ContactsHeader(props) {
   const dispatch = useDispatch();
@@ -59,8 +59,6 @@ function ContactsHeader(props) {
     ({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.showBankTargetAmount
   );
 
-  console.log('==================================================', showFireTargetAmount)
-
   const [name, setName] = React.useState("");
   const history = useHistory();
   const [templateName, setTemplateName] = React.useState("");
@@ -71,10 +69,10 @@ function ContactsHeader(props) {
     templates: [],
   });
   React.useEffect(() => {
-    const tempLists = [];
+    var tempLists = [];
     if (bonusPlanTemplates.length > 0) {
       Object.keys(bonusPlanTemplates[0]).map((item) => {
-        tempLists.push({ item, value: item });
+        tempLists.push({ item: item, value: item });
       });
       setState({ ...state, templates: tempLists });
     }
@@ -99,15 +97,7 @@ function ContactsHeader(props) {
         showMessage({ message: "Please Select Plan Template to Update!" })
       );
     } else {
-      console.log('===================================',{
-        ...data,
-        name: templateName,
-        showAutoTargetAmount,
-        showFireTargetAmount,
-        showLifeTargetAmount,
-        showHealthTargetAmount,
-        showBankTargetAmount,
-      });
+      console.log(data);
       dispatch(
         addContact({
           ...data,
@@ -119,13 +109,10 @@ function ContactsHeader(props) {
           showBankTargetAmount,
         })
       );
-      setTimeout(()=>{
-        dispatch(getTemplateData());
-        dispatch(
-          showMessage({ message: "Successfully Saved!", variant: "success" })
-        );
-      },1000)
-      
+      dispatch(getTemplateData());
+      dispatch(
+        showMessage({ message: "Successfully Saved!", variant: "success" })
+      );
     }
   };
 
@@ -154,7 +141,7 @@ function ContactsHeader(props) {
     }
 
     if (!templateName) {
-      dispatch(showMessage({ message, variant: "info" }));
+      dispatch(showMessage({ message: message, variant: "info" }));
       return;
     }
 
@@ -212,7 +199,7 @@ function ContactsHeader(props) {
             </FuseAnimate>
             <FuseAnimate animation="transition.slideLeftIn" delay={300}>
               <Typography variant="h6" className="mx-12 hidden sm:flex">
-                Commission & Bonus Template
+                {`Commission & Bonus Template`}
               </Typography>
             </FuseAnimate>
           </div>

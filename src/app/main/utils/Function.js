@@ -134,7 +134,7 @@ export const getLevel = (policyCount, policyName, bonusPlans) => {
 };
 
 export const getOtherActivityBonus = (name, bonusPlans) => {
-	// console.log('---------------', name, bonusPlans);
+	//console.log('---------------', name, bonusPlans);
 	if (bonusPlans.length > 0 && bonusPlans[0].hasOwnProperty('otherActivityBonus')) {
 		let value = 0;
 		Object.keys(bonusPlans[0].otherActivityBonus).map((key, n) => {
@@ -286,10 +286,9 @@ export const getMain = (
 									const item = entries[0][entry][entryUserId][key];
 									const writtenMonth = new Date(item.datePolicyIsWritten).getMonth();
 									const issuedMonth =
-										!item.datePolicyIsIssued
+										item.datePolicyIsIssued === ''
 											? ''
 											: new Date(item.datePolicyIsIssued).getMonth();
-									
 									if (production === 'Show Issued Production' && issuedMonth === '') {
 										return;
 									}
@@ -395,6 +394,6 @@ export const getMain = (
 		});
 	});
 
-	console.log('--------------------temp=', temp);
+	//console.log('--------------------temp=', temp);
 	return temp;
 };

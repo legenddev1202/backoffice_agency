@@ -5,15 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import FuseAnimateGroup from '@fuse/core/FuseAnimateGroup';
-import { makeStyles } from '@material-ui/core/styles';
-import { bonusPlanTemplate } from 'app/services/jsons';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { openNewContactDialog ,
+import BonusPlanTable from './BonusPlanTable';
+import {
 	openEditContactDialog,
 	removeContact,
 	selectContacts,
@@ -31,8 +24,15 @@ import { openNewContactDialog ,
 	changeHealthTargetValue,
 	changeBankTargetValue
 } from './store/bonusPlanSlice';
-
-import BonusPlanTable from './BonusPlanTable';
+import FuseAnimateGroup from '@fuse/core/FuseAnimateGroup';
+import { openNewContactDialog } from './store/bonusPlanSlice';
+import { makeStyles } from '@material-ui/core/styles';
+import { bonusPlanTemplate } from 'app/services/jsons';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles(theme => ({
 	addButton: {
@@ -54,12 +54,11 @@ function ContactsList(props) {
 	const data = useSelector(({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.data);
 	const addTempData = useSelector(({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.addTempData);
 	const removeTempData = useSelector(({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.removeTempData);
-	
 	const [contacts, setContact] = useState(bonusPlanTemplate);
 	const showAutoTargetAmount = useSelector(
 		({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.showAutoTargetAmount
 	);
-	// console.log('bbbbbbbbbbbbb', contacts);
+	//console.log('bbbbbbbbbbbbb', contacts);
 	const showFireTargetAmount = useSelector(
 		({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.showFireTargetAmount
 	);
@@ -105,8 +104,8 @@ function ContactsList(props) {
 
 	useEffect(() => {
 		if (Object.keys(removeTempData).length > 0) {
-			const temp = { ...contacts };
-			const subTemp = { ...temp[removeTempData.planType] };
+			var temp = { ...contacts };
+			var subTemp = { ...temp[removeTempData.planType] };
 			delete subTemp[removeTempData.id];
 
 			setContact({
@@ -117,7 +116,6 @@ function ContactsList(props) {
 	}, [removeTempData]);
 
 	useEffect(() => {
-		console.log('=============contacts============', contacts)
 		dispatch(setData({ ...contacts }));
 		dispatch(changeAutoTargetValue(contacts.showAutoTargetAmount));
 		dispatch(changeFireTargetValue(contacts.showFireTargetAmount));
@@ -125,7 +123,6 @@ function ContactsList(props) {
 		dispatch(changeHealthTargetValue(contacts.showHealthTargetAmount));
 		dispatch(changeBankTargetValue(contacts.showBankTargetAmount));
 	}, [contacts]);
-
 	const searchText = useSelector(({ bonusPlanTemplate }) => bonusPlanTemplate.autoBonus.searchText);
 	const user = useSelector(({ bonusPlanTemplate }) => bonusPlanTemplate.user);
 	const classes = useStyles(props);
@@ -299,8 +296,8 @@ function ContactsList(props) {
 								value={showAutoTargetAmount}
 								onChange={() => dispatch(changeAutoTargetValue(!showAutoTargetAmount))}
 							>
-								<MenuItem value={false}>% of Auto Premium</MenuItem>
-								<MenuItem value>Flat $ Amount</MenuItem>
+								<MenuItem value={false}>$ of Auto Premium</MenuItem>
+								<MenuItem value={true}>Flat $ Amount</MenuItem>
 							</Select>
 						</FormControl>
 					);
@@ -336,8 +333,8 @@ function ContactsList(props) {
 							value={showFireTargetAmount}
 							onChange={() => dispatch(changeFireTargetValue(!showFireTargetAmount))}
 						>
-							<MenuItem value={false}>% of Fire Premium</MenuItem>
-							<MenuItem value>Flat $ Amount</MenuItem>
+							<MenuItem value={false}>$ of Fire Premium</MenuItem>
+							<MenuItem value={true}>Flat $ Amount</MenuItem>
 						</Select>
 					</FormControl>
 				)
@@ -372,8 +369,8 @@ function ContactsList(props) {
 							value={showLifeTargetAmount}
 							onChange={() => dispatch(changeLifeTargetValue(!showLifeTargetAmount))}
 						>
-							<MenuItem value={false}>% of Life Premium</MenuItem>
-							<MenuItem value>Flat $ Amount</MenuItem>
+							<MenuItem value={false}>$ of Life Premium</MenuItem>
+							<MenuItem value={true}>Flat $ Amount</MenuItem>
 						</Select>
 					</FormControl>
 				)
@@ -408,8 +405,8 @@ function ContactsList(props) {
 							value={showHealthTargetAmount}
 							onChange={() => dispatch(changeHealthTargetValue(!showHealthTargetAmount))}
 						>
-							<MenuItem value={false}>% of Health Premium</MenuItem>
-							<MenuItem value>Flat $ Amount</MenuItem>
+							<MenuItem value={false}>$ of Health Premium</MenuItem>
+							<MenuItem value={true}>Flat $ Amount</MenuItem>
 						</Select>
 					</FormControl>
 				)
@@ -444,8 +441,8 @@ function ContactsList(props) {
 							value={showBankTargetAmount}
 							onChange={() => dispatch(changeBankTargetValue(!showBankTargetAmount))}
 						>
-							<MenuItem value={false}>% of Bank Premium</MenuItem>
-							<MenuItem value>Flat $ Amount</MenuItem>
+							<MenuItem value={false}>$ of Bank Premium</MenuItem>
+							<MenuItem value={true}>Flat $ Amount</MenuItem>
 						</Select>
 					</FormControl>
 				)
@@ -680,7 +677,7 @@ function ContactsList(props) {
 				// width: 128,
 				sortable: false,
 				Header: ({ selectedFlatRows }) => {
-					// console.log(selectedFlatRows);
+					//console.log(selectedFlatRows);
 					return (
 						<Fab
 							color="secondary"
@@ -738,121 +735,121 @@ function ContactsList(props) {
 				if (item.includes('autoBonus')) {
 					const tempData = [];
 					Object.keys(contacts.autoBonus).map(i => {
-						tempData.push(contacts.autoBonus[i]);
+						tempData.push(contacts['autoBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, autoBonus: tempData };
 				} else if (item.includes('fireBonus')) {
 					const tempData = [];
 					Object.keys(contacts.fireBonus).map(i => {
-						tempData.push(contacts.fireBonus[i]);
+						tempData.push(contacts['fireBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, fireBonus: tempData };
 				} else if (item.includes('lifeBonus')) {
 					const tempData = [];
 					Object.keys(contacts.lifeBonus).map(i => {
-						tempData.push(contacts.lifeBonus[i]);
+						tempData.push(contacts['lifeBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, lifeBonus: tempData };
 				} else if (item.includes('healthBonus')) {
 					const tempData = [];
 					Object.keys(contacts.healthBonus).map(i => {
-						tempData.push(contacts.healthBonus[i]);
+						tempData.push(contacts['healthBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, healthBonus: tempData };
 				} else if (item.includes('bankBonus')) {
 					const tempData = [];
 					Object.keys(contacts.bankBonus).map(i => {
-						tempData.push(contacts.bankBonus[i]);
+						tempData.push(contacts['bankBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, bankBonus: tempData };
 				} else if (item.includes('individualAutoTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.individualAutoTargetBonus).map(i => {
-						tempData.push(contacts.individualAutoTargetBonus[i]);
+						tempData.push(contacts['individualAutoTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, individualAutoTargetBonus: tempData };
 				} else if (item.includes('teamAutoTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.teamAutoTargetBonus).map(i => {
-						tempData.push(contacts.teamAutoTargetBonus[i]);
+						tempData.push(contacts['teamAutoTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, teamAutoTargetBonus: tempData };
 				} else if (item.includes('individualFireTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.individualFireTargetBonus).map(i => {
-						tempData.push(contacts.individualFireTargetBonus[i]);
+						tempData.push(contacts['individualFireTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, individualFireTargetBonus: tempData };
 				} else if (item.includes('individualLifeTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.individualLifeTargetBonus).map(i => {
-						tempData.push(contacts.individualLifeTargetBonus[i]);
+						tempData.push(contacts['individualLifeTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, individualLifeTargetBonus: tempData };
 				} else if (item.includes('individualHealthTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.individualHealthTargetBonus).map(i => {
-						tempData.push(contacts.individualHealthTargetBonus[i]);
+						tempData.push(contacts['individualHealthTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, individualHealthTargetBonus: tempData };
 				} else if (item.includes('individualBankTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.individualBankTargetBonus).map(i => {
-						tempData.push(contacts.individualBankTargetBonus[i]);
+						tempData.push(contacts['individualBankTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, individualBankTargetBonus: tempData };
 				} else if (item.includes('teamFireTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.teamFireTargetBonus).map(i => {
-						tempData.push(contacts.teamFireTargetBonus[i]);
+						tempData.push(contacts['teamFireTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, teamFireTargetBonus: tempData };
 				} else if (item.includes('teamLifeTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.teamLifeTargetBonus).map(i => {
-						tempData.push(contacts.teamLifeTargetBonus[i]);
+						tempData.push(contacts['teamLifeTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, teamLifeTargetBonus: tempData };
 				} else if (item.includes('teamHealthTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.teamHealthTargetBonus).map(i => {
-						tempData.push(contacts.teamHealthTargetBonus[i]);
+						tempData.push(contacts['teamHealthTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, teamHealthTargetBonus: tempData };
 				} else if (item.includes('teamBankTargetBonus')) {
 					const tempData = [];
 					Object.keys(contacts.teamBankTargetBonus).map(i => {
-						tempData.push(contacts.teamBankTargetBonus[i]);
+						tempData.push(contacts['teamBankTargetBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, teamBankTargetBonus: tempData };
 				} else if (item.includes('monthlyAgencyLapseAutoBonus')) {
 					const tempData = [];
 					Object.keys(contacts.monthlyAgencyLapseAutoBonus).map(i => {
-						tempData.push(contacts.monthlyAgencyLapseAutoBonus[i]);
+						tempData.push(contacts['monthlyAgencyLapseAutoBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, monthlyAgencyLapseAutoBonus: tempData };
 				} else if (item.includes('monthlyAgencyLapseFireBonus')) {
 					const tempData = [];
 					Object.keys(contacts.monthlyAgencyLapseFireBonus).map(i => {
-						tempData.push(contacts.monthlyAgencyLapseFireBonus[i]);
+						tempData.push(contacts['monthlyAgencyLapseFireBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, monthlyAgencyLapseFireBonus: tempData };
 				} else if (item.includes('monthlyAutoNetGrowthBonus')) {
 					const tempData = [];
 					Object.keys(contacts.monthlyAutoNetGrowthBonus).map(i => {
-						tempData.push(contacts.monthlyAutoNetGrowthBonus[i]);
+						tempData.push(contacts['monthlyAutoNetGrowthBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, monthlyAutoNetGrowthBonus: tempData };
 				} else if (item.includes('monthlyFireNetGrowthBonus')) {
 					const tempData = [];
 					Object.keys(contacts.monthlyFireNetGrowthBonus).map(i => {
-						tempData.push(contacts.monthlyFireNetGrowthBonus[i]);
+						tempData.push(contacts['monthlyFireNetGrowthBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, monthlyFireNetGrowthBonus: tempData };
 				} else if (item.includes('otherActivityBonus')) {
 					const tempData = [];
 					Object.keys(contacts.otherActivityBonus).map(i => {
-						tempData.push(contacts.otherActivityBonus[i]);
+						tempData.push(contacts['otherActivityBonus'][i]);
 					});
 					tempJSON = { ...tempJSON, otherActivityBonus: tempData };
 				}
