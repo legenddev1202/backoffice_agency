@@ -11,6 +11,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import _ from '@lodash';
+import HorizontalBarChart from 'app/main/components/widgets/HorizontalBarChart';
+import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
+import ModalVideo from "react-modal-video";
 import reducer from '../store';
 import Panel from '../../../components/widgets/Panel';
 import SelectBox from '../../../components/CustomSelectBox';
@@ -23,12 +27,8 @@ import { getVision, selectVision } from '../store/visionSlice';
 import { getLapseRate, selectLapseRate } from '../store/lapseRateSlice';
 import { Options as options, policies } from '../../../utils/Globals';
 import { dividing, ceil, getMain } from '../../../utils/Function';
-import HorizontalBarChart from 'app/main/components/widgets/HorizontalBarChart';
 
-import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 
-import ModalVideo from "react-modal-video";
 import "react-modal-video/scss/modal-video.scss";
 
 const belongTo = localStorage.getItem('@BELONGTO');
@@ -78,9 +78,10 @@ function Dashboard(props) {
 	}, [entries, bonusPlans, users, vision, lapseRate]);
 
 	useEffect(() => {
+		console.log('---------------', users)
 		if (!_.isEmpty(widgets) && !_.isEmpty(main)) {
-			let indGoalsAndActual = {}; // for Personal Product Goal Vs Actual Chart
-			let teamGoalsAndActual = {}; // for Production Goal Vs Actual Panels
+			const indGoalsAndActual = {}; // for Personal Product Goal Vs Actual Chart
+			const teamGoalsAndActual = {}; // for Production Goal Vs Actual Panels
 			let household = 0;
 			let individual = 0;
 			if (widgets.Dashboard_Multiline_GoalAndActual_Auto_Panel) {
@@ -102,32 +103,32 @@ function Dashboard(props) {
 							if (policy.value !== 'Total') {
 								// data for chart
 								indGoalsAndActual[user.id][`Total@Goals`] +=
-									main[production][period][user.id][policy.value]['Goals'];
+									main[production][period][user.id][policy.value].Goals;
 								indGoalsAndActual[user.id][`Total@Actual`] +=
-									main[production][period][user.id][policy.value]['Policies'];
+									main[production][period][user.id][policy.value].Policies;
 
 								if (user.id !== UID) {
 									teamGoalsAndActual[`${policy.value}@Team`] +=
-										main[production][period][user.id][policy.value]['Goals'];
+										main[production][period][user.id][policy.value].Goals;
 
 									teamGoalsAndActual[`Total@Team`] +=
-										main[production][period][user.id][policy.value]['Goals'];
+										main[production][period][user.id][policy.value].Goals;
 
 									teamGoalsAndActual[`Total@Actual`] +=
-										main[production][period][user.id][policy.value]['Policies'];
+										main[production][period][user.id][policy.value].Policies;
 
 									teamGoalsAndActual[`${policy.value}@Actual`] +=
-										main[production][period][user.id][policy.value]['Policies'];
+										main[production][period][user.id][policy.value].Policies;
 
-									household += main[production][period][user.id][policy.value]['household'];
-									individual += main[production][period][user.id][policy.value]['individual'];
+									household += main[production][period][user.id][policy.value].household;
+									individual += main[production][period][user.id][policy.value].individual;
 								}
 								if (user.id === UID) {
 									teamGoalsAndActual[`Total@Office`] +=
-										main[production][period][user.id][policy.value]['Goals'];
+										main[production][period][user.id][policy.value].Goals;
 
 									teamGoalsAndActual[`${policy.value}@Office`] +=
-										main[production][period][user.id][policy.value]['Goals'];
+										main[production][period][user.id][policy.value].Goals;
 								}
 							}
 						});
@@ -136,9 +137,9 @@ function Dashboard(props) {
 
 				// Team Goal vs Actual
 				policies.map(policy => {
-					let tempCardData = [];
+					const tempCardData = [];
 					let tempCard = {};
-					const cardData = widgets[`Dashboard_Multiline_Team_GoalAndActual_${policy.value}_Panel`].cardData;
+					const {cardData} = widgets[`Dashboard_Multiline_Team_GoalAndActual_${policy.value}_Panel`];
 					cardData.map(card => {
 						tempCard = card;
 
@@ -157,13 +158,13 @@ function Dashboard(props) {
 				// Lapse Rate
 				policies.map(policy => {
 					if (policy.value === 'Auto' || policy.value === 'Fire') {
-						let tempCardData = [];
+						const tempCardData = [];
 						let tempCard = {};
-						const cardData = widgets[`Dashboard_LapseRate_${policy.value}_Panel`].cardData;
+						const {cardData} = widgets[`Dashboard_LapseRate_${policy.value}_Panel`];
 						tempCard = cardData[0];
 						tempCard = {
 							...tempCard,
-							count: `${main[production][period][UID][policy.value]['lapseRateChange']}`
+							count: `${main[production][period][UID][policy.value].lapseRateChange}`
 						};
 						tempCardData.push(tempCard);
 						widgets = {
@@ -177,7 +178,7 @@ function Dashboard(props) {
 				});
 
 				// Multiline Percentage
-				let tempData = [];
+				const tempData = [];
 				let cardData = widgets.Dashboard_Multiline_Percentage_Panel.cardData[0];
 				cardData = { ...cardData, count: `${ceil(dividing(household * 100, household + individual))}` };
 				tempData.push(cardData);
@@ -194,12 +195,12 @@ function Dashboard(props) {
 				let goal = widgets.Dashboard_Users_GoalVsActual_Chart.mainChart.TW.datasets[0];
 				let actual = widgets.Dashboard_Users_GoalVsActual_Chart.mainChart.TW.datasets[1];
 
-				let tempGoal = [];
+				const tempGoal = [];
 				// let tempGoalBackgroundColor = [];
 				// let tempGoalHoverBackgroundColor = [];
-				let tempActual = [];
-				let tempDatasets = [];
-				let tempLabels = [];
+				const tempActual = [];
+				const tempDatasets = [];
+				const tempLabels = [];
 				users.map(user => {
 					if (user.belongTo === UID) {
 						tempGoal.push(indGoalsAndActual[user.id][`Total@Goals`]);
@@ -217,7 +218,7 @@ function Dashboard(props) {
 						tempLabels.push(user.data.displayName);
 					}
 				});
-				//console.log('====', tempActual);
+				// console.log('====', tempActual);
 				goal = {
 					...goal,
 					data: tempGoal
@@ -355,7 +356,7 @@ function Dashboard(props) {
 			// }
 		}
 
-		//console.log('-----widgets', widgets);
+		// console.log('-----widgets', widgets);
 		setData({ widgets });
 	}, [widgets, main, period]);
 
@@ -382,6 +383,7 @@ function Dashboard(props) {
 			</FuseAnimate>
 		);
 	}
+
 
 	return (
 		<FusePageSimple
