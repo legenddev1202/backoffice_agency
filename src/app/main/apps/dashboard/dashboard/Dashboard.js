@@ -56,7 +56,7 @@ function Dashboard(props) {
 	const [main, setMain] = useState({});
 	const [date, setDate] = useState(moment());
 	const [period, setPeriod] = useState(moment().format('MMMM'));
-	const [production, setProduction] = useState('Show Written Production');
+	const [production, setProduction] = useState('Show Issued Production');
 	const [title, setTitle] = useState('Welcome');
 	const [isOpen, setOpen] = useState(false);
 
@@ -78,7 +78,6 @@ function Dashboard(props) {
 	}, [entries, bonusPlans, users, vision, lapseRate]);
 
 	useEffect(() => {
-		console.log('---------------', users)
 		if (!_.isEmpty(widgets) && !_.isEmpty(main)) {
 			const indGoalsAndActual = {}; // for Personal Product Goal Vs Actual Chart
 			const teamGoalsAndActual = {}; // for Production Goal Vs Actual Panels
@@ -91,6 +90,7 @@ function Dashboard(props) {
 					teamGoalsAndActual[`${policy.value}@Team`] = 0;
 					teamGoalsAndActual[`${policy.value}@Actual`] = 0;
 				});
+				
 				users.map(user => {
 					if (user.belongTo === UID) {
 						indGoalsAndActual[user.id] = {
@@ -101,13 +101,15 @@ function Dashboard(props) {
 						};
 						policies.map(policy => {
 							if (policy.value !== 'Total') {
+								
 								// data for chart
 								indGoalsAndActual[user.id][`Total@Goals`] +=
 									main[production][period][user.id][policy.value].Goals;
 								indGoalsAndActual[user.id][`Total@Actual`] +=
 									main[production][period][user.id][policy.value].Policies;
-
+									
 								if (user.id !== UID) {
+									console.log('------------ddd---------')
 									teamGoalsAndActual[`${policy.value}@Team`] +=
 										main[production][period][user.id][policy.value].Goals;
 
@@ -124,11 +126,12 @@ function Dashboard(props) {
 									individual += main[production][period][user.id][policy.value].individual;
 								}
 								if (user.id === UID) {
+									console.log('-----------ooo----------',main[production][period][user.id][policy.value].Goals)
 									teamGoalsAndActual[`Total@Office`] +=
 										main[production][period][user.id][policy.value].Goals;
 
 									teamGoalsAndActual[`${policy.value}@Office`] +=
-										main[production][period][user.id][policy.value].Goals;
+										main[production][period][user.id][policy.value].Policies;
 								}
 							}
 						});
@@ -146,6 +149,7 @@ function Dashboard(props) {
 						tempCard = { ...tempCard, count: teamGoalsAndActual[`${policy.value}@${card.label}`] };
 						tempCardData.push(tempCard);
 					});
+					console.log('===========mian',tempCardData)
 					widgets = {
 						...widgets,
 						[`Dashboard_Multiline_Team_GoalAndActual_${policy.value}_Panel`]: {
@@ -356,7 +360,7 @@ function Dashboard(props) {
 			// }
 		}
 
-		// console.log('-----widgets', widgets);
+		console.log('-----widgets', widgets);
 		setData({ widgets });
 	}, [widgets, main, period]);
 
